@@ -299,6 +299,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 1000
                 items:
                   $ref: "#/components/schemas/GetWarehouseResponse"
         "400":
@@ -369,7 +370,6 @@ components:
         format: int32
         minimum: 1
         default: 1
-        x-go-type: int
 
     pageSize:
       name: size
@@ -382,7 +382,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 100
-        x-go-type: int
 
     pickupPointKey:
       name: key
@@ -461,8 +460,6 @@ components:
           - desc
       required: false
       description: "Сортировка по дате создания заказа"
-      x-oapi-codegen-extra-tags:
-        validate: omitempty,oneof=asc desc
 
   requestBodies:
     CreateWarehouseRequest:
@@ -554,9 +551,6 @@ components:
     UUID:
       type: string
       format: uuid
-      x-go-type: uuid.UUID
-      x-go-type-import:
-        path: "github.com/gofrs/uuid/v5"
 
     ErrorCodes:
       description: Коды ошибок
@@ -579,6 +573,7 @@ components:
           $ref: "#/components/schemas/ErrorCodes"
         messages:
           type: array
+          maxItems: 100
           items:
             type: string
 
@@ -632,6 +627,7 @@ components:
             - Регионы
 
             Для городов МО используется значение "Москва", для всех остальных не из списка - "Регионы"
+
     EstimateOrderResponseBody:
       type: object
       required:
@@ -643,15 +639,12 @@ components:
           type: integer
           minimum: 0
           description: "Минимальный срок доставки в днях"
-          x-go-type: int
         to:
           type: integer
           minimum: 0
           description: "Максимальный срок доставки в днях"
-          x-go-type: int
         cost:
           type: integer
-          x-go-type: int
           description: "Стоимость доставки в копейках"
           example: 25000
 
@@ -663,6 +656,7 @@ components:
       properties:
         pickupPoints:
           type: array
+          maxItems: 1000
           items:
             $ref: "#/components/schemas/PickupPoint"
         pager:
@@ -759,10 +753,10 @@ components:
     Pager:
       type: object
       required:
-        - total
+        - totalItems
         - currentPage
         - pageSize
-        - pageCount
+        - totalPages
       properties:
         totalItems:
           description: Всего записей в коллекции
@@ -770,27 +764,23 @@ components:
           format: int32
           minimum: 0
           example: 30
-          x-go-type: int
         totalPages:
           description: Количество страниц
           type: integer
           format: int32
           minimum: 1
           example: 2
-          x-go-type: int
         currentPage:
           description: Номер страницы
           type: integer
           format: int32
           minimum: 1
           example: 1
-          x-go-type: int
         pageSize:
           description: Количество элементов на одной странице
           type: integer
           format: int32
           example: 100
-          x-go-type: int
 
     WarehouseName:
       type: string
@@ -845,9 +835,6 @@ components:
         id:
           type: string
           format: uuid
-          x-go-type: uuid.UUID
-          x-go-type-import:
-            path: "github.com/gofrs/uuid/v5"
 
     GetWarehouseResponse:
       type: object
@@ -904,7 +891,6 @@ components:
           type: string
           format: uuid
           description: "Идентификатор склада партнёра"
-          x-go-type: uuid.UUID
 
     CreateOrderResponse:
       type: object
@@ -915,9 +901,6 @@ components:
         customerOrderId:
           type: string
           description: "Идентификатор заказа в системе отправителя"
-        issueCode:
-          type: string
-          description: "Код для получения заказа"
         status:
           $ref: "#/components/schemas/OrderStatus"
         payment:
@@ -929,7 +912,6 @@ components:
         cost:
           type: integer
           description: "Стоимость доставки в копейках"
-          x-go-type: int
 
     OrderPayment:
       type: object
@@ -939,10 +921,8 @@ components:
         declaredValue:
           type: number
           description: "Заявленная стоимость"
-          x-go-type: float64
-          x-oapi-codegen-extra-tags:
-            validate: required,gte=0
           example: 153.28
+          minimum: 1
 
     OrderDelivery:
       type: object
@@ -952,8 +932,6 @@ components:
       properties:
         pickupPointKey:
           type: string
-          x-oapi-codegen-extra-tags:
-            validate: required
           example: "63933"
         recipient:
           $ref: "#/components/schemas/OrderDeliveryRecipient"
@@ -995,27 +973,23 @@ components:
         weight:
           type: integer
           description: "Вес посылки в граммах"
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 500
+          minimum: 1
         length:
           type: integer
           description: "Длина посылки в миллиметрах"
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 200
+          minimum: 1
         width:
           type: integer
           description: "Ширина посылки в миллиметрах"
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 150
+          minimum: 1
         height:
           type: integer
           description: "Высота посылки в миллиметрах"
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 50
+          minimum: 1
 
     OrderStatus:
       type: string
