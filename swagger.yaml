@@ -693,12 +693,6 @@ components:
           description: Почтовый индекс пункта выдачи заказов
           type: string
           example: "420076"
-        phones:
-          description: Телефон
-          type: array
-          items:
-            type: string
-            example: +7 (800) 700-96-16
         workHours:
           $ref: "#/components/schemas/WorkHours"
         coordinates:
