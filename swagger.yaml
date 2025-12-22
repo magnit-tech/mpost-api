@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.0.2
+  version: 1.0.3
 
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/api/
@@ -891,6 +891,17 @@ components:
           type: string
           format: uuid
           description: "Идентификатор склада партнёра"
+        returnType:
+          type: string
+          description: "Тип возврата"
+          enum:
+            - "utilization"
+            - "return"
+          default: return
+        returnWarehouseId:
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+          description: "Идентификатор склада возврата"
 
     CreateOrderResponse:
       type: object
