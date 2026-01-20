@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.0.4
+  version: 1.0.5
 
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
@@ -917,6 +917,12 @@ components:
         cost:
           type: integer
           description: "Стоимость доставки в копейках"
+        externalOrderId:
+          type: string
+          description: "Внешний идентификатор заказа"
+          example: "EXT-2343423432"
+        warehouseId:
+          $ref: "#/components/schemas/UUID"
 
     OrderPayment:
       type: object
