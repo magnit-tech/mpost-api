@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.0.5
+  version: 1.0.6
 
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
@@ -1070,6 +1070,11 @@ components:
         fullTrackingLink:
           type: string
           description: 'Ссылка на отслеживание по полному трек номеру'
+        storageEndDate:
+          $ref: "#/components/schemas/DateTime"
+          description: |
+            Cрок хранения заказа на ПВЗ.
+            Отображается только только в статусе ACCEPTED_AT_POINT
 
     GetOrdersResponse:
       type: object
