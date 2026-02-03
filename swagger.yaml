@@ -1092,9 +1092,9 @@ components:
         parcels:
           type: array
           items:
-            $ref: "#/components/schemas/Parcel"
+            $ref: "#/components/schemas/ParcelShort"
 
-    Parcel:
+    ParcelShort:
       type: object
       required:
         - declared_value
@@ -1114,11 +1114,17 @@ components:
           example: 153.28
         characteristic:
           $ref: "#/components/schemas/Characteristics"
-        status:
-          allOf:
-            - $ref: "#/components/schemas/OrderV1Status"
-        storage_end_date:
-          $ref: "#/components/schemas/DateTime"
+
+    Parcel:
+      allOf:
+        - $ref: "#/components/schemas/ParcelShort"
+        - type: object
+          properties:
+            status:
+              allOf:
+                - $ref: "#/components/schemas/OrderV1Status"
+            storage_end_date:
+              $ref: "#/components/schemas/DateTime"
 
     PickupPointShort:
       type: object
