@@ -418,8 +418,6 @@ paths:
           description: Трек-номер заказа
           schema:
             $ref: "#/components/schemas/UUID"
-          x-oapi-codegen-extra-tags:
-            validate: required
         - name: barcodes
           in: query
           required: true
@@ -431,8 +429,6 @@ paths:
               type: string
           style: form
           explode: false
-          x-oapi-codegen-extra-tags:
-            validate: required,dive,min=1
       responses:
         "204":
           description: Заказ отменен
@@ -780,12 +776,6 @@ components:
           description: Почтовый индекс пункта выдачи заказов
           type: string
           example: "420076"
-        phones:
-          description: Телефон
-          type: array
-          items:
-            type: string
-            example: +7 (800) 700-96-16
         workHours:
           $ref: "#/components/schemas/WorkHours"
         coordinates:
@@ -1057,8 +1047,6 @@ components:
         parcels:
           type: array
           minLength: 1
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           items:
             $ref: "#/components/schemas/Parcel"
 
@@ -1074,9 +1062,6 @@ components:
         tracking_number:
           type: string
           format: uuid
-          x-go-type: uuid.UUID
-          x-go-type-import:
-            path: github.com/gofrs/uuid/v5
         customer_order_id:
           type: string
           description: "Идентификатор заказа в системе отправителя"
@@ -1126,8 +1111,6 @@ components:
         declared_value:
           description: "Заявленная стоимость"
           type: number
-          x-oapi-codegen-extra-tags:
-            validate: required
           example: 153.28
         characteristic:
           $ref: "#/components/schemas/Characteristics"
@@ -1163,14 +1146,10 @@ components:
         phone_number:
           type: string
           description: "Телефон получателя"
-          x-oapi-codegen-extra-tags:
-            validate: required,e164
           example: "+7.........."
         email:
           type: string
           description: "Почта получателя"
-          x-oapi-codegen-extra-tags:
-            validate: omitempty,email
           example: "test@mail.ru"
         address:
           type: string
@@ -1189,29 +1168,21 @@ components:
           description: "Вес посылки в граммах"
           type: integer
           minimum: 1
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 500
         length:
           description: "Длина посылки в миллиметрах"
           minimum: 1
           type: integer
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 200
         width:
           description: "Ширина посылки в миллиметрах"
           type: integer
           minimum: 1
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 150
         height:
           description: "Высота посылки в миллиметрах"
           type: integer
           minimum: 1
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           example: 50
 
     OrderV2:
@@ -1231,9 +1202,6 @@ components:
         tracking_number:
           type: string
           format: uuid
-          x-go-type: uuid.UUID
-          x-go-type-import:
-            path: github.com/gofrs/uuid/v5
         delivery:
           $ref: "#/components/schemas/OrderV2Delivery"
         recipient:
@@ -1267,8 +1235,6 @@ components:
         parcels:
           type: array
           minLength: 1
-          x-oapi-codegen-extra-tags:
-            validate: required,gt=0
           items:
             $ref: "#/components/schemas/Parcel"
 
