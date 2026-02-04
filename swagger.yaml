@@ -957,9 +957,6 @@ components:
         customerOrderId:
           type: string
           description: "Идентификатор заказа в системе отправителя"
-        issueCode:
-          type: string
-          description: "Код для получения заказа"
         status:
           $ref: "#/components/schemas/OrderStatus"
         payment:
