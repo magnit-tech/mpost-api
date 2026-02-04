@@ -1065,10 +1065,6 @@ components:
         - declared_value
         - characteristic
       properties:
-        id:
-          allOf:
-            - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор посылки. Проставляется сервисом."
         barcode:
           type: string
           description: "Идентификатор посылки в системе отправителя"
@@ -1085,6 +1081,10 @@ components:
         - $ref: "#/components/schemas/ParcelShort"
         - type: object
           properties:
+            id:
+              allOf:
+                - $ref: "#/components/schemas/UUID"
+              description: "Идентификатор посылки. Проставляется сервисом."
             status:
               allOf:
                 - $ref: "#/components/schemas/OrderV1Status"
