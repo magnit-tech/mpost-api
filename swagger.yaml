@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.0.7
+  version: 1.0.8
 
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
@@ -22,7 +22,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/OauthRequest'
+              $ref: "#/components/schemas/OauthRequest"
       responses:
         200:
           description: Успешный ответ
@@ -35,17 +35,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OauthError'
+                $ref: "#/components/schemas/OauthError"
         401:
           description: "Ошибка авторизации. В запросе не указан или указан несуществующий client_id"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OauthError'
+                $ref: "#/components/schemas/OauthError"
         500:
-          description: 'Internal Server Error'
+          description: "Internal Server Error"
         503:
-          description: 'Internal Server Error'
+          description: "Internal Server Error"
 
   /api/v1/magnit-post/order-statuses:
     post:
@@ -253,14 +253,14 @@ paths:
       parameters:
         - $ref: "#/components/parameters/pageNumber"
         - $ref: "#/components/parameters/pageSize"
-        - $ref: '#/components/parameters/pickupPointKey'
-        - $ref: '#/components/parameters/region'
-        - $ref: '#/components/parameters/city'
+        - $ref: "#/components/parameters/pickupPointKey"
+        - $ref: "#/components/parameters/region"
+        - $ref: "#/components/parameters/city"
       responses:
         "200":
           description: "OK"
           content:
-            'application/json':
+            "application/json":
               schema:
                 $ref: "#/components/schemas/PickupPointsResponse"
         "400":
@@ -400,6 +400,38 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/OrderV2"
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      summary: Отменить заказ по трек-номеру и баркоду посылки
+      description: Метод позволяет отменить заказ по трек-номеру и баркоду посылки.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: Трек-номер заказа
+          schema:
+            $ref: "#/components/schemas/UUID"
+        - name: barcodes
+          in: query
+          required: true
+          description: Список баркодов посылок для отмены заказа
+          schema:
+            type: array
+            minItems: 1
+            items:
+              type: string
+          style: form
+          explode: false
+      responses:
+        "204":
+          description: Заказ отменен
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
@@ -678,6 +710,10 @@ components:
             - Регионы
 
             Для городов МО используется значение "Москва", для всех остальных не из списка - "Регионы"
+        parcels_count:
+          type: integer
+          minimum: 1
+          description: "Количество посылок в заказе"
 
     EstimateOrderResponseBody:
       type: object
@@ -698,6 +734,10 @@ components:
           type: integer
           description: "Стоимость доставки в копейках"
           example: 25000
+        cost_with_vat:
+          type: integer
+          description: "Стоимость доставки с НДС в копейках"
+          example: 30500
 
     PickupPointsResponse:
       type: object
@@ -793,7 +833,7 @@ components:
     Week:
       type: string
       description: День недели
-      enum: [ MON, TUE, WED, THU, FRI, SAT, SUN ]
+      enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
 
     Pager:
       type: object
@@ -957,6 +997,9 @@ components:
         customerOrderId:
           type: string
           description: "Идентификатор заказа в системе отправителя"
+        issueCode:
+          type: string
+          description: "Код для получения заказа"
         status:
           $ref: "#/components/schemas/OrderStatus"
         payment:
@@ -1365,10 +1408,10 @@ components:
           $ref: "#/components/schemas/DateTime"
         trackingLink:
           type: string
-          description: 'Ссылка на отслеживание'
+          description: "Ссылка на отслеживание"
         fullTrackingLink:
           type: string
-          description: 'Ссылка на отслеживание по полному трек номеру'
+          description: "Ссылка на отслеживание по полному трек номеру"
         storageEndDate:
           $ref: "#/components/schemas/DateTime"
           description: |
