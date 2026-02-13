@@ -408,38 +408,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-    delete:
-      summary: Отменить заказ по трек-номеру и баркоду посылки
-      description: Метод позволяет отменить заказ по трек-номеру и баркоду посылки.
-      parameters:
-        - name: order_id
-          in: path
-          required: true
-          description: Трек-номер заказа
-          schema:
-            $ref: "#/components/schemas/UUID"
-        - name: barcodes
-          in: query
-          required: true
-          description: Список баркодов посылок для отмены заказа
-          schema:
-            type: array
-            minItems: 1
-            items:
-              type: string
-          style: form
-          explode: false
-      responses:
-        "204":
-          description: Заказ отменен
-        "400":
-          $ref: "#/components/responses/ErrorResponse"
-        "401":
-          $ref: "#/components/responses/ErrorResponse"
-        "404":
-          $ref: "#/components/responses/ErrorResponse"
-        "500":
-          $ref: "#/components/responses/ErrorResponse"
 
 components:
   parameters:
@@ -997,9 +965,6 @@ components:
         customerOrderId:
           type: string
           description: "Идентификатор заказа в системе отправителя"
-        issueCode:
-          type: string
-          description: "Код для получения заказа"
         status:
           $ref: "#/components/schemas/OrderStatus"
         payment:
