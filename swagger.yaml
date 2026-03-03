@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.0.8
+  version: 1.0.9
 
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
@@ -1021,7 +1021,31 @@ components:
           type: array
           minLength: 1
           items:
-            $ref: "#/components/schemas/ParcelShort"
+            $ref: "#/components/schemas/Parcel"
+        order_payment:
+          $ref: "#/components/schemas/OrderV2Payment"
+
+    OrderV2Payment:
+      type: object
+      description: "Информация по оплате заказа"
+      properties:
+        delivery_cost:
+          type: integer
+          description: "Стоимость услуги доставки (в копейках)"
+          example: 3500
+        total_sum_for_order:
+          type: integer
+          description: "Сумма по всем посылкам"
+          example: 12500
+        supplier_inn:
+          type: string
+          description: "ИНН поставщика"
+        supplier_name:
+          type: string
+          description: "Наименование поставщика"
+        vat_payer:
+          type: boolean
+          description: "Флаг, указывающий, является ли поставщик плательщиком НДС"
 
     CreateOrderV2Response:
       type: object
@@ -1065,7 +1089,7 @@ components:
         parcels:
           type: array
           items:
-            $ref: "#/components/schemas/Parcel"
+            $ref: "#/components/schemas/ParcelShort"
 
     ParcelShort:
       type: object
@@ -1073,6 +1097,10 @@ components:
         - declared_value
         - characteristic
       properties:
+        id:
+          allOf:
+            - $ref: "#/components/schemas/UUID"
+          description: "Идентификатор посылки. Проставляется сервисом."
         barcode:
           type: string
           description: "Идентификатор посылки в системе отправителя"
@@ -1083,16 +1111,75 @@ components:
           example: 153.28
         characteristic:
           $ref: "#/components/schemas/Characteristics"
+        parcel_payment:
+          $ref: "#/components/schemas/ParcelPayment"
+
+    ParcelPayment:
+      type: object
+      description: "Информация по оплате посылки"
+      properties:
+        billing_type:
+          type: string
+          description: "Статус оплаты посылки"
+          enum:
+            - not_paid
+            - already_paid
+        items:
+          type: array
+          description: "Список товаров в посылке"
+          items:
+            $ref: "#/components/schemas/ParcelItem"
+        total_sum_for_parcel:
+          type: integer
+          description: "Сумма за посылку"
+
+    ParcelItem:
+      type: object
+      description: "Товар внутри посылки"
+      properties:
+        good_id:
+          type: string
+          description: "Идентификатор товара"
+          example: "SKU-12345"
+        name:
+          type: string
+          description: "Наименование товара"
+          example: "Молоко 1л"
+        unit:
+          type: string
+          description: "Единицы товара: piece — штуки, weight — граммы"
+          enum:
+            - piece
+            - weight
+        quantity:
+          type: integer
+          description: "Количество единиц товара"
+          example: 2
+        unit_price:
+          type: integer
+          description: "Цена за единицу товара (в копейках)"
+          example: 1500
+        total_sum_for_item:
+          type: integer
+          description: "Суммарная стоимость товара"
+          example: 3000
+        vat_rate:
+          type: integer
+          description: "Ставка НДС для товара"
+          example: 20
+          enum:
+            - 0
+            - 5
+            - 7
+            - 10
+            - 20
+            - 22
 
     Parcel:
       allOf:
         - $ref: "#/components/schemas/ParcelShort"
         - type: object
           properties:
-            id:
-              allOf:
-                - $ref: "#/components/schemas/UUID"
-              description: "Идентификатор посылки. Проставляется сервисом."
             status:
               allOf:
                 - $ref: "#/components/schemas/OrderV1Status"
