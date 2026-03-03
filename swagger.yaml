@@ -360,8 +360,8 @@ paths:
 
   /api/v2/magnit-post/orders:
     post:
-      summary: Метод позволяет создать новый многоместный заказ на доставку.
-      description: Создание многоместного заказа
+      summary: Создание многоместного заказа
+      description: Метод позволяет создать новый многоместный заказ на доставку.
       requestBody:
         required: true
         content:
