@@ -1011,9 +1011,6 @@ components:
     OrderV2Payment:
       type: object
       description: Информация по оплате заказа
-      example:
-        delivery_cost: 3500
-        total_sum_for_order: 3500
       properties:
         delivery_cost:
           type: integer
@@ -1026,12 +1023,15 @@ components:
         supplier_inn:
           type: string
           description: ИНН поставщика
+          example: 12345678
         supplier_name:
           type: string
           description: Наименование поставщика
+          example: ООО "Рога и Копытв"
         vat_payer:
           type: boolean
           description: Флаг, указывающий, является ли поставщик плательщиком НДС
+          example: true
     CreateOrderV2Response:
       type: object
       required:
@@ -1169,9 +1169,18 @@ components:
               description: Список товаров в посылке
               items:
                 $ref: "#/components/schemas/ParcelItem"
+              example:
+                - good_id: SKU-12345
+                  name:  Молоко 1л
+                  unit: piece
+                  quantity: 2
+                  unit_price: 15000
+                  total_sum_for_item: 30000
+                  vat_rate: 10
             total_sum_for_parcel:
               type: integer
               description: Сумма за посылку
+              example: 30000
         barcode:
           type: string
           description: Идентификатор посылки в системе отправителя
