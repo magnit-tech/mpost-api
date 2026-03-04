@@ -1110,7 +1110,8 @@ components:
           type: number
           example: 153.28
         characteristic:
-          $ref: "#/components/schemas/Characteristics"
+          allOf:
+            - $ref: "#/components/schemas/Characteristics"
         parcel_payment:
           $ref: "#/components/schemas/ParcelPayment"
 
