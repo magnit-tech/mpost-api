@@ -3,7 +3,6 @@ info:
   description: Magnit Post service API
   title: Magnit Post service API
   version: 1.0.9
-
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
@@ -11,45 +10,47 @@ servers:
     description: Основной сервер интеграции.
 security:
   - bearerAuth: []
-
 paths:
   /api/v2/oauth/token:
     post:
       summary: Получение аутентификационного токена
-      description: |
-        Запросите новый токен 1 раз за 60 минут. Запрашивать токен перед каждым запросом к API-методам не требуется. Ссылка на полную спецификацию OAuth2 - https://tools.ietf.org/html/rfc6749"
+      description: >
+        Запросите новый токен 1 раз за 60 минут. Запрашивать токен перед каждым
+        запросом к API-методам не требуется. Ссылка на полную спецификацию
+        OAuth2 - https://tools.ietf.org/html/rfc6749"
       requestBody:
         content:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/OauthRequest"
       responses:
-        200:
+        "200":
           description: Успешный ответ
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OauthToken"
-        400:
+        "400":
           description: Ошибка в параметрах, в ответе список ошибок валидации
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OauthError"
-        401:
-          description: "Ошибка авторизации. В запросе не указан или указан несуществующий client_id"
+        "401":
+          description: Ошибка авторизации. В запросе не указан или указан несуществующий
+            client_id
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/OauthError"
-        500:
-          description: "Internal Server Error"
-        503:
-          description: "Internal Server Error"
-
+        "500":
+          description: Internal Server Error
+        "503":
+          description: Internal Server Error
   /api/v1/magnit-post/order-statuses:
     post:
-      description: Метод позволяет получить актуальные статусы заказов на доставку, передав список этих заказов.
+      description: Метод позволяет получить актуальные статусы заказов на доставку,
+        передав список этих заказов.
       summary: Получить актуальные статусы по нескольким заказам
       requestBody:
         required: true
@@ -66,9 +67,9 @@ paths:
                     $ref: "#/components/schemas/UUID"
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/GetOrderStatusesResponse"
         "400":
@@ -77,7 +78,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v1/magnit-post/orders:
     post:
       summary: Создать заказ
@@ -90,20 +90,21 @@ paths:
               $ref: "#/components/schemas/CreateOrderRequest"
       responses:
         "201":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/CreateOrderResponse"
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
-          description: "Unauthorized"
+          description: Unauthorized
         "500":
           $ref: "#/components/responses/ErrorResponse"
     get:
       summary: Получить список заказов
-      description: Метод позволяет получить список заказов с фильтрами, сортировкой и пагинацией.
+      description: Метод позволяет получить список заказов с фильтрами, сортировкой и
+        пагинацией.
       parameters:
         - $ref: "#/components/parameters/pageNumber"
         - $ref: "#/components/parameters/pageSize"
@@ -115,9 +116,9 @@ paths:
         - $ref: "#/components/parameters/SortDirection"
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/GetOrdersResponse"
         "400":
@@ -126,28 +127,38 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v2/magnit-post/orders/estimate:
     post:
       summary: Расчет срока и стоимости доставки
-      description: |
+      description: >
         ### Метод позволяет оценить время и стоимость доставки заказа.
+
 
         city_from - обазятельное поле, город отправки.
 
+
         Доступные значения:
 
+
         - Казань
+
         - Москва
+
         - Екатеринбург
+
         - Ижевск
+
         - Магнитогорск
+
         - Оренбург
+
         - Саратов
+
         - Регионы
 
-        Для городов МО используется значение "Москва", для всех остальных не из списка - "Регионы"
 
+        Для городов МО используется значение "Москва", для всех остальных не из
+        списка - "Регионы"
       requestBody:
         required: true
         content:
@@ -156,18 +167,17 @@ paths:
               $ref: "#/components/schemas/EstimateOrderRequestBody"
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/EstimateOrderResponseBody"
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
-          description: "Unauthorized"
+          description: Unauthorized
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v1/magnit-post/orders/{order_id}:
     get:
       summary: Получить заказ по ID
@@ -182,9 +192,9 @@ paths:
             format: uuid
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/Order"
         "400":
@@ -208,7 +218,7 @@ paths:
             format: uuid
       responses:
         "204":
-          description: "Заказ отменен"
+          description: Заказ отменен
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
@@ -217,11 +227,11 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v1/magnit-post/orders/{order_id}/status-history:
     get:
       summary: Получить историю статусов заказа
-      description: Метод позволяет получить историю изменения статусов заказа на доставку по его идентификатору.
+      description: Метод позволяет получить историю изменения статусов заказа на
+        доставку по его идентификатору.
       parameters:
         - name: order_id
           in: path
@@ -245,7 +255,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v1/magnit-post/pickup-points:
     get:
       summary: Получить список пунктов выдачи заказов
@@ -258,9 +267,9 @@ paths:
         - $ref: "#/components/parameters/city"
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/PickupPointsResponse"
         "400":
@@ -269,7 +278,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v1/magnit-post/warehouses:
     post:
       summary: Создать склад партнёра
@@ -278,7 +286,7 @@ paths:
         $ref: "#/components/requestBodies/CreateWarehouseRequest"
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
             application/json:
               schema:
@@ -328,7 +336,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v1/magnit-post/orders/{order_id}/labels:
     get:
       summary: Получить PDF-этикетку посылки
@@ -357,7 +364,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v2/magnit-post/orders:
     post:
       summary: Создание многоместного заказа
@@ -370,18 +376,17 @@ paths:
               $ref: "#/components/schemas/CreateOrderV2Request"
       responses:
         "201":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/CreateOrderV2Response"
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
-          description: "Unauthorized"
+          description: Unauthorized
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
   /api/v2/magnit-post/orders/{order_id}:
     get:
       summary: Получить многоместный заказ по ID
@@ -395,9 +400,9 @@ paths:
             type: string
       responses:
         "200":
-          description: "OK"
+          description: OK
           content:
-            "application/json":
+            application/json:
               schema:
                 $ref: "#/components/schemas/OrderV2"
         "400":
@@ -408,7 +413,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-
 components:
   parameters:
     pageNumber:
@@ -421,7 +425,6 @@ components:
         format: int32
         minimum: 1
         default: 1
-
     pageSize:
       name: size
       in: query
@@ -433,7 +436,6 @@ components:
         minimum: 1
         maximum: 1000
         default: 100
-
     pickupPointKey:
       name: key
       in: query
@@ -442,7 +444,6 @@ components:
       schema:
         type: string
         example: "63933"
-
     region:
       name: region
       in: query
@@ -450,8 +451,7 @@ components:
       required: false
       schema:
         type: string
-        example: "Татарстан"
-
+        example: Татарстан
     city:
       name: city
       in: query
@@ -459,8 +459,7 @@ components:
       required: false
       schema:
         type: string
-        example: "Казань"
-
+        example: Казань
     CustomerOrderID:
       in: query
       name: customerOrderId
@@ -468,7 +467,6 @@ components:
         type: string
       required: false
       description: Фильтр по идентификатору заказа в системе отправителя
-
     ExternalOrderID:
       in: query
       name: externalOrderId
@@ -476,7 +474,6 @@ components:
         type: string
       required: false
       description: Фильтр по внешнему идентификатору заказа
-
     StatusParam:
       in: query
       name: status
@@ -484,7 +481,6 @@ components:
         $ref: "#/components/schemas/OrderV1Status"
       required: false
       description: Фильтр по статусу заказа
-
     CreatedFrom:
       in: query
       name: createdFrom
@@ -492,7 +488,6 @@ components:
         $ref: "#/components/schemas/DateTime"
       required: false
       description: Дата создания с
-
     CreatedTo:
       in: query
       name: createdTo
@@ -500,7 +495,6 @@ components:
         $ref: "#/components/schemas/DateTime"
       required: false
       description: Дата создания по
-
     SortDirection:
       name: sortDirection
       in: query
@@ -510,25 +504,22 @@ components:
           - asc
           - desc
       required: false
-      description: "Сортировка по дате создания заказа"
-
+      description: Сортировка по дате создания заказа
   requestBodies:
     CreateWarehouseRequest:
-      description: "Запрос на создание склада"
+      description: Запрос на создание склада
       required: true
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/CreateWarehouseRequest"
-
   responses:
     ErrorResponse:
-      description: "Ошибка"
+      description: Ошибка
       content:
-        "application/json":
+        application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponseBody"
-
   schemas:
     OauthToken:
       type: object
@@ -555,7 +546,6 @@ components:
           type: string
           description: Тип токена
           example: bearer
-
     OauthRequest:
       type: object
       required:
@@ -566,22 +556,21 @@ components:
       properties:
         client_id:
           type: string
-          description: "Идентификатор клиента"
+          description: Идентификатор клиента
           example: da8b953b-c6cc-4d88-a53f-60e3b0e96615
         client_secret:
           type: string
-          description: "Секрет"
+          description: Секрет
           example: 525348e77144a9cee9a7471a8b67c50ea85b9e3eb377a3c1a3a23db88f9150eefe76e6a3
         scope:
           type: string
-          description: "Права доступа. Разделитель - пробел"
+          description: Права доступа. Разделитель - пробел
           example: openid last-mile:claims
         grant_type:
           type: string
-          description: "Тип доступа"
+          description: Тип доступа
           example: client_credentials
           default: client_credentials
-
     OauthError:
       type: object
       required:
@@ -589,20 +578,19 @@ components:
       properties:
         error:
           type: string
-          description: "Код ошибки, кратко описывающий ее причину"
+          description: Код ошибки, кратко описывающий ее причину
           example: invalid_client
         error_description:
           type: string
-          description: "Детальное описание ошибки"
-          example: Client authentication failed (e.g., unknown client, no client authentication included, or unsupported authentication method).
+          description: Детальное описание ошибки
+          example: Client authentication failed (e.g., unknown client, no client
+            authentication included, or unsupported authentication method).
         message:
           type: string
-          description: "Системное сообщение"
-
+          description: Системное сообщение
     UUID:
       type: string
       format: uuid
-
     ErrorCodes:
       description: Коды ошибок
       type: string
@@ -613,7 +601,6 @@ components:
         - INTERNAL_SERVER_ERROR
         - UNPROCESSABLE_ENTITY
         - CONFLICT
-
     Errors:
       type: object
       required:
@@ -627,12 +614,10 @@ components:
           maxItems: 100
           items:
             type: string
-
     ErrorResponseBody:
       oneOf:
         - $ref: "#/components/schemas/Error"
         - $ref: "#/components/schemas/Errors"
-
     Error:
       type: object
       required:
@@ -643,7 +628,6 @@ components:
           $ref: "#/components/schemas/ErrorCodes"
         message:
           type: string
-
     EstimateOrderRequestBody:
       type: object
       required:
@@ -651,38 +635,48 @@ components:
       properties:
         pup_region:
           type: string
-          description: "Регион ПВЗ. Обязательно, если не указан pup_key"
+          description: Регион ПВЗ. Обязательно, если не указан pup_key
         pup_city:
           type: string
-          description: "Город ПВЗ. Обязательно, если не указан pup_key"
+          description: Город ПВЗ. Обязательно, если не указан pup_key
         pup_key:
           type: string
-          description: "Идентификатор ПВЗ. Обязательно, если не указаны pup_region и pup_city"
+          description: Идентификатор ПВЗ. Обязательно, если не указаны pup_region и pup_city
         pup_name:
           type: string
-          description: "Название ПВЗ"
+          description: Название ПВЗ
         city_from:
           type: string
           example: Москва
-          description: |
+          description: >
             Город отправки. Доступные значения:
 
+
             - Казань
+
             - Москва
+
             - Воронеж
+
             - Екатеринбург
+
             - Ижевск
+
             - Магнитогорск
+
             - Оренбург
+
             - Саратов
+
             - Регионы
 
-            Для городов МО используется значение "Москва", для всех остальных не из списка - "Регионы"
+
+            Для городов МО используется значение "Москва", для всех остальных не
+            из списка - "Регионы"
         parcels_count:
           type: integer
           minimum: 1
-          description: "Количество посылок в заказе"
-
+          description: Количество посылок в заказе
     EstimateOrderResponseBody:
       type: object
       required:
@@ -693,20 +687,19 @@ components:
         from:
           type: integer
           minimum: 0
-          description: "Минимальный срок доставки в днях"
+          description: Минимальный срок доставки в днях
         to:
           type: integer
           minimum: 0
-          description: "Максимальный срок доставки в днях"
+          description: Максимальный срок доставки в днях
         cost:
           type: integer
-          description: "Стоимость доставки в копейках"
+          description: Стоимость доставки в копейках
           example: 25000
         cost_with_vat:
           type: integer
-          description: "Стоимость доставки с НДС в копейках"
+          description: Стоимость доставки с НДС в копейках
           example: 30500
-
     PickupPointsResponse:
       type: object
       required:
@@ -720,7 +713,6 @@ components:
             $ref: "#/components/schemas/PickupPoint"
         pager:
           $ref: "#/components/schemas/Pager"
-
     PickupPoint:
       type: object
       properties:
@@ -739,15 +731,15 @@ components:
         address:
           description: Адрес пункта выдачи заказов
           type: string
-          example: "г. Казань, ул. Альфии Авзаловой, д. 7 (Магнит Косметик)"
+          example: г. Казань, ул. Альфии Авзаловой, д. 7 (Магнит Косметик)
         region:
           description: Регион, в котором находится ПВЗ
           type: string
-          example: "Республика Татарстан"
+          example: Республика Татарстан
         city:
           description: Город, в котором находится ПВЗ
           type: string
-          example: "Казань"
+          example: Казань
         index:
           description: Почтовый индекс пункта выдачи заказов
           type: string
@@ -756,7 +748,6 @@ components:
           $ref: "#/components/schemas/WorkHours"
         coordinates:
           $ref: "#/components/schemas/PickupPointCoordinates"
-
     PickupPointCoordinates:
       type: object
       properties:
@@ -774,7 +765,6 @@ components:
           minimum: -180
           maximum: 180
           example: 48.904931
-
     WorkHours:
       type: array
       description: Расписание работы ПВЗ
@@ -782,7 +772,6 @@ components:
         $ref: "#/components/schemas/DayWorkHours"
       minItems: 1
       maxItems: 7
-
     DayWorkHours:
       type: object
       description: Часы работы
@@ -792,17 +781,22 @@ components:
         from:
           description: Открытие
           type: string
-          example: "08:00"
+          example: 08:00
         till:
           description: Закрытие
           type: string
-          example: "20:00"
-
+          example: 20:00
     Week:
       type: string
       description: День недели
-      enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
-
+      enum:
+        - MON
+        - TUE
+        - WED
+        - THU
+        - FRI
+        - SAT
+        - SUN
     Pager:
       type: object
       required:
@@ -834,19 +828,16 @@ components:
           type: integer
           format: int32
           example: 100
-
     WarehouseName:
       type: string
       minLength: 1
       maxLength: 256
-      description: "Название склада"
-
+      description: Название склада
     WarehouseAddress:
       type: string
       minLength: 1
       maxLength: 512
-      description: "Адрес склада"
-
+      description: Адрес склада
     Coordinates:
       type: object
       required:
@@ -858,14 +849,13 @@ components:
           format: double
           minimum: -90
           maximum: 90
-          description: "Широта"
+          description: Широта
         longitude:
           type: number
           format: double
           minimum: -180
           maximum: 180
-          description: "Долгота"
-
+          description: Долгота
     CreateWarehouseRequest:
       type: object
       required:
@@ -879,7 +869,6 @@ components:
           $ref: "#/components/schemas/WarehouseAddress"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
-
     CreateWarehouseResponse:
       type: object
       required:
@@ -888,7 +877,6 @@ components:
         id:
           type: string
           format: uuid
-
     GetWarehouseResponse:
       type: object
       properties:
@@ -900,7 +888,6 @@ components:
           $ref: "#/components/schemas/WarehouseAddress"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
-
     UpdateWarehouseRequest:
       type: object
       required:
@@ -917,7 +904,6 @@ components:
           $ref: "#/components/schemas/WarehouseAddress"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
-
     CreateOrderRequest:
       type: object
       required:
@@ -928,12 +914,12 @@ components:
       properties:
         customerOrderId:
           type: string
-          description: "Идентификатор заказа в системе отправителя"
-          example: "DO-2343423432"
+          description: Идентификатор заказа в системе отправителя
+          example: DO-2343423432
         externalOrderId:
           type: string
-          description: "Внешний идентификатор заказа"
-          example: "EXT-2343423432"
+          description: Внешний идентификатор заказа
+          example: EXT-2343423432
         payment:
           $ref: "#/components/schemas/OrderPayment"
         delivery:
@@ -943,28 +929,27 @@ components:
         warehouseId:
           type: string
           format: uuid
-          description: "Идентификатор склада партнёра"
+          description: Идентификатор склада партнёра
         returnType:
           type: string
-          description: "Тип возврата"
+          description: Тип возврата
           enum:
-            - "utilization"
-            - "return"
+            - utilization
+            - return
           default: return
         returnWarehouseId:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада возврата"
-
+          description: Идентификатор склада возврата
     CreateOrderResponse:
       type: object
       properties:
         trackingNumber:
           type: string
-          description: "Трек-номер заказа. Используется для получения информации по заказу."
+          description: Трек-номер заказа. Используется для получения информации по заказу.
         customerOrderId:
           type: string
-          description: "Идентификатор заказа в системе отправителя"
+          description: Идентификатор заказа в системе отправителя
         status:
           $ref: "#/components/schemas/OrderStatus"
         payment:
@@ -975,14 +960,13 @@ components:
           $ref: "#/components/schemas/OrderCharacteristic"
         cost:
           type: integer
-          description: "Стоимость доставки в копейках"
+          description: Стоимость доставки в копейках
         externalOrderId:
           type: string
-          description: "Внешний идентификатор заказа"
-          example: "EXT-2343423432"
+          description: Внешний идентификатор заказа
+          example: EXT-2343423432
         warehouseId:
           $ref: "#/components/schemas/UUID"
-
     CreateOrderV2Request:
       type: object
       required:
@@ -994,66 +978,60 @@ components:
           $ref: "#/components/schemas/PickupPointShort"
         customer_order_id:
           type: string
-          description: "Идентификатор заказа в системе отправителя"
-          example: "DO-2343423432"
+          description: Идентификатор заказа в системе отправителя
+          example: DO-2343423432
         external_order_id:
           type: string
-          description: "Внешний идентификатор заказа"
-          example: "EXT-2343423432"
+          description: Внешний идентификатор заказа
+          example: EXT-2343423432
         recipient:
           $ref: "#/components/schemas/Recipient"
         warehouse_id:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада партнёра"
+          description: Идентификатор склада партнёра
         return_type:
           type: string
-          description: "Тип возврата"
+          description: Тип возврата
           enum:
-            - "utilization"
-            - "return"
+            - utilization
+            - return
           default: return
         return_warehouse_id:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада возврата"
+          description: Идентификатор склада возврата
         parcels:
           type: array
           minLength: 1
           items:
             $ref: "#/components/schemas/ParcelShort"
-          x-example:
-            - declared_value: 153.28
-              characteristic:
-                weight: 100
-                length: 200
-                width: 150
-                height: 50
         order_payment:
           $ref: "#/components/schemas/OrderV2Payment"
-
     OrderV2Payment:
       type: object
-      description: "Информация по оплате заказа"
+      description: Информация по оплате заказа
+      example:
+        delivery_cost: 3500
+        total_sum_for_order: 3500
       properties:
         delivery_cost:
           type: integer
-          description: "Стоимость услуги доставки (в копейках)"
+          description: Стоимость услуги доставки (в копейках)
           example: 3500
         total_sum_for_order:
           type: integer
-          description: "Сумма по всем посылкам"
+          description: Сумма по всем посылкам
           example: 12500
         supplier_inn:
           type: string
-          description: "ИНН поставщика"
+          description: ИНН поставщика
         supplier_name:
           type: string
-          description: "Наименование поставщика"
+          description: Наименование поставщика
         vat_payer:
           type: boolean
-          description: "Флаг, указывающий, является ли поставщик плательщиком НДС"
-
+          description: Флаг, указывающий, является ли поставщик плательщиком НДС
     CreateOrderV2Response:
       type: object
       required:
@@ -1068,12 +1046,12 @@ components:
           format: uuid
         customer_order_id:
           type: string
-          description: "Идентификатор заказа в системе отправителя"
-          example: "DO-2343423432"
+          description: Идентификатор заказа в системе отправителя
+          example: DO-2343423432
         external_order_id:
           type: string
-          description: "Внешний идентификатор заказа"
-          example: "EXT-2343423432"
+          description: Внешний идентификатор заказа
+          example: EXT-2343423432
         recipient:
           $ref: "#/components/schemas/Recipient"
         pickup_point:
@@ -1081,74 +1059,34 @@ components:
         warehouse_id:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада партнёра"
+          description: Идентификатор склада партнёра
         return_type:
           type: string
-          description: "Тип возврата"
+          description: Тип возврата
           enum:
-            - "utilization"
-            - "return"
+            - utilization
+            - return
           default: return
         return_warehouse_id:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада возврата"
+          description: Идентификатор склада возврата
         parcels:
           type: array
           items:
             $ref: "#/components/schemas/ParcelShort"
-
-    ParcelShort:
-      type: object
-      required:
-        - declared_value
-        - characteristic
-      properties:
-        declared_value:
-          description: "Заявленная стоимость"
-          type: number
-          example: 153.28
-        characteristic:
-          allOf:
-            - $ref: "#/components/schemas/Characteristics"
-        parcel_payment:
-          $ref: "#/components/schemas/ParcelPayment"
-        barcode:
-          type: string
-          description: "Идентификатор посылки в системе отправителя"
-          example: "MP-2343423432_1"
-
-    ParcelPayment:
-      type: object
-      description: "Информация по оплате посылки"
-      properties:
-        billing_type:
-          type: string
-          description: "Статус оплаты посылки"
-          enum:
-            - not_paid
-            - already_paid
-        items:
-          type: array
-          description: "Список товаров в посылке"
-          items:
-            $ref: "#/components/schemas/ParcelItem"
-        total_sum_for_parcel:
-          type: integer
-          description: "Сумма за посылку"
-
     ParcelItem:
       type: object
-      description: "Товар внутри посылки"
+      description: Товар внутри посылки
       properties:
         good_id:
           type: string
-          description: "Идентификатор товара"
-          example: "SKU-12345"
+          description: Идентификатор товара
+          example: SKU-12345
         name:
           type: string
-          description: "Наименование товара"
-          example: "Молоко 1л"
+          description: Наименование товара
+          example: Молоко 1л
         unit:
           type: string
           description: "Единицы товара: piece — штуки, weight — граммы"
@@ -1157,19 +1095,19 @@ components:
             - weight
         quantity:
           type: integer
-          description: "Количество единиц товара"
+          description: Количество единиц товара
           example: 2
         unit_price:
           type: integer
-          description: "Цена за единицу товара (в копейках)"
+          description: Цена за единицу товара (в копейках)
           example: 1500
         total_sum_for_item:
           type: integer
-          description: "Суммарная стоимость товара"
+          description: Суммарная стоимость товара
           example: 3000
         vat_rate:
           type: integer
-          description: "Ставка НДС для товара"
+          description: Ставка НДС для товара
           example: 20
           enum:
             - 0
@@ -1178,7 +1116,66 @@ components:
             - 10
             - 20
             - 22
-
+    ParcelShort:
+      type: object
+      required:
+        - declared_value
+        - characteristic
+      properties:
+        declared_value:
+          description: Заявленная стоимость
+          type: number
+          example: 153.28
+        characteristic:
+          type: object
+          required:
+            - weight
+            - length
+            - width
+            - height
+          properties:
+            weight:
+              description: Вес посылки в граммах
+              type: integer
+              minimum: 1
+              example: 500
+            length:
+              description: Длина посылки в миллиметрах
+              minimum: 1
+              type: integer
+              example: 200
+            width:
+              description: Ширина посылки в миллиметрах
+              type: integer
+              minimum: 1
+              example: 150
+            height:
+              description: Высота посылки в миллиметрах
+              type: integer
+              minimum: 1
+              example: 50
+        parcel_payment:
+          type: object
+          description: Информация по оплате посылки
+          properties:
+            billing_type:
+              type: string
+              description: Статус оплаты посылки
+              enum:
+                - not_paid
+                - already_paid
+            items:
+              type: array
+              description: Список товаров в посылке
+              items:
+                $ref: "#/components/schemas/ParcelItem"
+            total_sum_for_parcel:
+              type: integer
+              description: Сумма за посылку
+        barcode:
+          type: string
+          description: Идентификатор посылки в системе отправителя
+          example: MP-2343423432_1
     Parcel:
       allOf:
         - $ref: "#/components/schemas/ParcelShort"
@@ -1192,8 +1189,7 @@ components:
             id:
               allOf:
                 - $ref: "#/components/schemas/UUID"
-              description: "Идентификатор посылки. Проставляется сервисом."
-
+              description: Идентификатор посылки. Проставляется сервисом.
     PickupPointShort:
       type: object
       required:
@@ -1203,7 +1199,6 @@ components:
           description: Ключ пункта выдачи заказа
           type: string
           example: "63933"
-
     Recipient:
       type: object
       required:
@@ -1211,54 +1206,24 @@ components:
       properties:
         first_name:
           type: string
-          description: "Имя получателя"
-          example: "Иван"
+          description: Имя получателя
+          example: Иван
         family_name:
           type: string
-          description: "Фамилия получателя"
-          example: "Иванов"
+          description: Фамилия получателя
+          example: Иванов
         phone_number:
           type: string
-          description: "Телефон получателя"
-          example: "+7.........."
+          description: Телефон получателя
+          example: +7..........
         email:
           type: string
-          description: "Почта получателя"
-          example: "test@mail.ru"
+          description: Почта получателя
+          example: test@mail.ru
         address:
           type: string
-          description: "Адрес получателя"
-          example: "г. Казань, ул. Альфии Авзаловой, д. 7"
-
-    Characteristics:
-      type: object
-      required:
-        - weight
-        - length
-        - width
-        - height
-      properties:
-        weight:
-          description: "Вес посылки в граммах"
-          type: integer
-          minimum: 1
-          example: 500
-        length:
-          description: "Длина посылки в миллиметрах"
-          minimum: 1
-          type: integer
-          example: 200
-        width:
-          description: "Ширина посылки в миллиметрах"
-          type: integer
-          minimum: 1
-          example: 150
-        height:
-          description: "Высота посылки в миллиметрах"
-          type: integer
-          minimum: 1
-          example: 50
-
+          description: Адрес получателя
+          example: г. Казань, ул. Альфии Авзаловой, д. 7
     OrderV2:
       type: object
       required:
@@ -1267,12 +1232,12 @@ components:
       properties:
         external_order_id:
           type: string
-          description: "Внешний идентификатор заказа"
-          example: "EXT-2343423432"
+          description: Внешний идентификатор заказа
+          example: EXT-2343423432
         customer_order_id:
           type: string
-          description: "Идентификатор заказа в системе отправителя"
-          example: "MP-2343423432"
+          description: Идентификатор заказа в системе отправителя
+          example: MP-2343423432
         tracking_number:
           type: string
           format: uuid
@@ -1282,36 +1247,35 @@ components:
           $ref: "#/components/schemas/Recipient"
         pickup_code:
           type: string
-          description: "Код для получения заказа"
+          description: Код для получения заказа
         tracking_link:
           type: string
-          description: "Ссылка на отслеживание"
+          description: Ссылка на отслеживание
         full_tracking_link:
           type: string
-          description: "Ссылка на отслеживание по полному трек номеру"
+          description: Ссылка на отслеживание по полному трек номеру
         created_at:
           $ref: "#/components/schemas/DateTime"
         warehouse_id:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада партнёра"
+          description: Идентификатор склада партнёра
         return_type:
           type: string
-          description: "Тип возврата"
+          description: Тип возврата
           enum:
-            - "utilization"
-            - "return"
+            - utilization
+            - return
           default: return
         return_warehouse_id:
           allOf:
             - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор склада возврата"
+          description: Идентификатор склада возврата
         parcels:
           type: array
           minLength: 1
           items:
             $ref: "#/components/schemas/Parcel"
-
     OrderV2Delivery:
       type: object
       required:
@@ -1324,8 +1288,7 @@ components:
           example: "63933"
         pickup_point_address:
           type: string
-          example: "г. Казань, ул. Альфии Авзаловой, д. 7 (Магнит Косметик)"
-
+          example: г. Казань, ул. Альфии Авзаловой, д. 7 (Магнит Косметик)
     OrderPayment:
       type: object
       required:
@@ -1333,10 +1296,9 @@ components:
       properties:
         declaredValue:
           type: number
-          description: "Заявленная стоимость"
+          description: Заявленная стоимость
           example: 153.28
           minimum: 1
-
     OrderDelivery:
       type: object
       required:
@@ -1348,7 +1310,6 @@ components:
           example: "63933"
         recipient:
           $ref: "#/components/schemas/OrderDeliveryRecipient"
-
     OrderDeliveryRecipient:
       type: object
       required:
@@ -1356,25 +1317,24 @@ components:
       properties:
         firstName:
           type: string
-          description: "Имя получателя"
-          example: "Иван"
+          description: Имя получателя
+          example: Иван
         familyName:
           type: string
-          description: "Фамилия получателя"
-          example: "Иванов"
+          description: Фамилия получателя
+          example: Иванов
         phoneNumber:
           type: string
-          description: "Телефон получателя"
-          example: "+7.........."
+          description: Телефон получателя
+          example: +7..........
         email:
           type: string
-          description: "Почта получателя"
-          example: "test@mail.ru"
+          description: Почта получателя
+          example: test@mail.ru
         address:
           type: string
-          description: "Адрес получателя"
-          example: "г. Казань, ул. Альфии Авзаловой, д. 7"
-
+          description: Адрес получателя
+          example: г. Казань, ул. Альфии Авзаловой, д. 7
     OrderCharacteristic:
       type: object
       required:
@@ -1385,59 +1345,57 @@ components:
       properties:
         weight:
           type: integer
-          description: "Вес посылки в граммах"
+          description: Вес посылки в граммах
           example: 500
           minimum: 1
         length:
           type: integer
-          description: "Длина посылки в миллиметрах"
+          description: Длина посылки в миллиметрах
           example: 200
           minimum: 1
         width:
           type: integer
-          description: "Ширина посылки в миллиметрах"
+          description: Ширина посылки в миллиметрах
           example: 150
           minimum: 1
         height:
           type: integer
-          description: "Высота посылки в миллиметрах"
+          description: Высота посылки в миллиметрах
           example: 50
           minimum: 1
-
     OrderStatus:
       type: string
-      description: "Статус заказа на доставку"
+      description: Статус заказа на доставку
       enum:
-        - "NEW"
-        - "CREATED"
-        - "DELIVERING_STARTED"
-        - "ACCEPTED_AT_POINT"
-        - "IN_COURIER_DELIVERY"
-        - "ISSUED"
-        - "DESTROYED"
-        - "ACCEPTED_AT_WAREHOUSE"
-        - "REMOVED"
-        - "WAITING_RETURN"
-        - "RETURN_INITIATED"
-        - "RETURN_SEND_TO_WAREHOUSE"
-        - "POSSIBLY_DEFECTED"
-        - "DEFECTED"
-        - "RETURN_ACCEPTED_AT_WAREHOUSE"
-        - "RETURNED_TO_PROVIDER"
-        - "CANCELED_BY_PROVIDER"
-        - "ACCEPTED_AT_CUSTOMS"
-
+        - NEW
+        - CREATED
+        - DELIVERING_STARTED
+        - ACCEPTED_AT_POINT
+        - IN_COURIER_DELIVERY
+        - ISSUED
+        - DESTROYED
+        - ACCEPTED_AT_WAREHOUSE
+        - REMOVED
+        - WAITING_RETURN
+        - RETURN_INITIATED
+        - RETURN_SEND_TO_WAREHOUSE
+        - POSSIBLY_DEFECTED
+        - DEFECTED
+        - RETURN_ACCEPTED_AT_WAREHOUSE
+        - RETURNED_TO_PROVIDER
+        - CANCELED_BY_PROVIDER
+        - ACCEPTED_AT_CUSTOMS
     Order:
       type: object
       properties:
         trackingNumber:
           type: string
           nullable: true
-          description: "Трек-номер заказа"
+          description: Трек-номер заказа
         customerOrderId:
           type: string
           nullable: true
-          description: "Идентификатор заказа в системе отправителя"
+          description: Идентификатор заказа в системе отправителя
         status:
           allOf:
             - $ref: "#/components/schemas/OrderStatus"
@@ -1457,27 +1415,26 @@ components:
         pickupCode:
           type: string
           nullable: true
-          description: "Код для получения заказа"
+          description: Код для получения заказа
         externalOrderId:
           type: string
           nullable: true
-          description: "Идентификатор заказа для сверок"
+          description: Идентификатор заказа для сверок
         warehouseId:
           $ref: "#/components/schemas/UUID"
         createdAt:
           $ref: "#/components/schemas/DateTime"
         trackingLink:
           type: string
-          description: "Ссылка на отслеживание"
+          description: Ссылка на отслеживание
         fullTrackingLink:
           type: string
-          description: "Ссылка на отслеживание по полному трек номеру"
+          description: Ссылка на отслеживание по полному трек номеру
         storageEndDate:
           $ref: "#/components/schemas/DateTime"
           description: |
             Cрок хранения заказа на ПВЗ.
             Отображается только только в статусе ACCEPTED_AT_POINT
-
     GetOrdersResponse:
       type: object
       required:
@@ -1490,7 +1447,6 @@ components:
             $ref: "#/components/schemas/Order"
         pager:
           $ref: "#/components/schemas/Pager"
-
     GetOrderStatusesResponse:
       type: object
       required:
@@ -1513,7 +1469,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/UUID"
-
     DeliveryOrderHistoryResponse:
       type: object
       description: История изменения статусов заказа на доставку
@@ -1532,36 +1487,33 @@ components:
                 type: integer
                 format: int64
                 description: Время изменения статуса
-
     DateTime:
       type: string
       description: "Дата/время в формате (RFC3339 формат : %Y-%M-%DT%h:%m:%sZ)"
-      example: "2023-03-20T15:04:05.000Z"
+      example: 2023-03-20T15:04:05.000Z
       format: date-time
-
     OrderV1Status:
       type: string
-      description: "Статус заказа на доставку"
+      description: Статус заказа на доставку
       enum:
-        - "NEW"
-        - "CREATED"
-        - "DELIVERING_STARTED"
-        - "ACCEPTED_AT_POINT"
-        - "IN_COURIER_DELIVERY"
-        - "ISSUED"
-        - "DESTROYED"
-        - "ACCEPTED_AT_WAREHOUSE"
-        - "REMOVED"
-        - "WAITING_RETURN"
-        - "RETURN_INITIATED"
-        - "RETURN_SEND_TO_WAREHOUSE"
-        - "POSSIBLY_DEFECTED"
-        - "DEFECTED"
-        - "RETURN_ACCEPTED_AT_WAREHOUSE"
-        - "RETURNED_TO_PROVIDER"
-        - "CANCELED_BY_PROVIDER"
-        - "ACCEPTED_AT_CUSTOMS"
-
+        - NEW
+        - CREATED
+        - DELIVERING_STARTED
+        - ACCEPTED_AT_POINT
+        - IN_COURIER_DELIVERY
+        - ISSUED
+        - DESTROYED
+        - ACCEPTED_AT_WAREHOUSE
+        - REMOVED
+        - WAITING_RETURN
+        - RETURN_INITIATED
+        - RETURN_SEND_TO_WAREHOUSE
+        - POSSIBLY_DEFECTED
+        - DEFECTED
+        - RETURN_ACCEPTED_AT_WAREHOUSE
+        - RETURNED_TO_PROVIDER
+        - CANCELED_BY_PROVIDER
+        - ACCEPTED_AT_CUSTOMS
   securitySchemes:
     bearerAuth:
       type: http
