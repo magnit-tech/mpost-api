@@ -1021,7 +1021,7 @@ components:
           type: array
           minLength: 1
           items:
-            $ref: "#/components/schemas/Parcel"
+            $ref: "#/components/schemas/ParcelShort"
         order_payment:
           $ref: "#/components/schemas/OrderV2Payment"
 
