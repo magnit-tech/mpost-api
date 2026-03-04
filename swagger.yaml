@@ -1022,6 +1022,13 @@ components:
           minLength: 1
           items:
             $ref: "#/components/schemas/ParcelShort"
+          x-example:
+            - declared_value: 153.28
+              characteristic:
+                weight: 100
+                length: 200
+                width: 150
+                height: 50
         order_payment:
           $ref: "#/components/schemas/OrderV2Payment"
 
@@ -1097,14 +1104,6 @@ components:
         - declared_value
         - characteristic
       properties:
-        id:
-          allOf:
-            - $ref: "#/components/schemas/UUID"
-          description: "Идентификатор посылки. Проставляется сервисом."
-        barcode:
-          type: string
-          description: "Идентификатор посылки в системе отправителя"
-          example: "MP-2343423432_1"
         declared_value:
           description: "Заявленная стоимость"
           type: number
@@ -1114,6 +1113,10 @@ components:
             - $ref: "#/components/schemas/Characteristics"
         parcel_payment:
           $ref: "#/components/schemas/ParcelPayment"
+        barcode:
+          type: string
+          description: "Идентификатор посылки в системе отправителя"
+          example: "MP-2343423432_1"
 
     ParcelPayment:
       type: object
@@ -1186,6 +1189,10 @@ components:
                 - $ref: "#/components/schemas/OrderV1Status"
             storage_end_date:
               $ref: "#/components/schemas/DateTime"
+            id:
+              allOf:
+                - $ref: "#/components/schemas/UUID"
+              description: "Идентификатор посылки. Проставляется сервисом."
 
     PickupPointShort:
       type: object
