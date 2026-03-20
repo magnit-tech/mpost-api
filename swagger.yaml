@@ -1027,6 +1027,9 @@ components:
           type: integer
           description: Стоимость услуги доставки (в копейках)
           example: 3500
+        delivery_vat_rate:
+          example: 20
+          $ref: '#/components/schemas/VatRate'
         total_sum_for_order:
           type: integer
           description: Сумма по всем посылкам
@@ -1034,11 +1037,16 @@ components:
         supplier_inn:
           type: string
           description: ИНН поставщика
+          minLength: 10
+          maxLength: 12
+          pattern: '^[0-9]+$'
           example: 12345678
         supplier_name:
           type: string
           description: Наименование поставщика
           example: ООО "Рога и Копытв"
+          minLength: 1
+          maxLength: 255
         vat_payer:
           type: boolean
           description: Флаг, указывающий, является ли поставщик плательщиком НДС
@@ -1138,33 +1146,7 @@ components:
           type: number
           example: 153.28
         characteristic:
-          type: object
-          required:
-            - weight
-            - length
-            - width
-            - height
-          properties:
-            weight:
-              description: Вес посылки в граммах
-              type: integer
-              minimum: 1
-              example: 500
-            length:
-              description: Длина посылки в миллиметрах
-              minimum: 1
-              type: integer
-              example: 200
-            width:
-              description: Ширина посылки в миллиметрах
-              type: integer
-              minimum: 1
-              example: 150
-            height:
-              description: Высота посылки в миллиметрах
-              type: integer
-              minimum: 1
-              example: 50
+          $ref: "#/components/schemas/Characteristics"
         parcel_payment:
           type: object
           description: Информация по оплате посылки
@@ -1345,10 +1327,39 @@ components:
         - declaredValue
       properties:
         declaredValue:
+          description: "Заявленная стоимость"
           type: number
-          description: Заявленная стоимость
+          format: double
           example: 153.28
+        delivery_cost:
+          type: integer
+          format: int
+          description: "Стоимость услуги доставки (в копейках)"
+          example: 3500
           minimum: 1
+        delivery_vat_rate:
+          $ref: '#/components/schemas/VatRate'
+        total_sum_for_order:
+          type: integer
+          format: int
+          description: "Сумма по всем посылкам"
+          example: 12500
+          minimum: 1
+        supplier_inn:
+          type: string
+          description: "ИНН поставщика"
+          minLength: 10
+          maxLength: 12
+          pattern: '^[0-9]+$'
+        supplier_name:
+          type: string
+          description: "Наименование поставщика"
+          minLength: 1
+          maxLength: 255
+        vat_payer:
+          type: boolean
+          description: "Флаг, указывающий, является ли поставщик плательщиком НДС"
+          example: true
     OrderDelivery:
       type: object
       required:
@@ -1554,6 +1565,18 @@ components:
         - RETURNED_TO_PROVIDER
         - CANCELED_BY_PROVIDER
         - ACCEPTED_AT_CUSTOMS
+    VatRate:
+      type: integer
+      format: int
+      description: "Ставка НДС"
+      example: 20
+      enum:
+        - 0
+        - 5
+        - 7
+        - 10
+        - 20
+        - 22
   securitySchemes:
     bearerAuth:
       type: http
