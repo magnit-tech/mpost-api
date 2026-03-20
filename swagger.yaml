@@ -1030,6 +1030,7 @@ components:
         delivery_vat_rate:
           example: 20
           $ref: '#/components/schemas/VatRate'
+          description: Ставка НДС. Если не облагается НДС то ничего не передавать.
         total_sum_for_order:
           type: integer
           description: Сумма по всем посылкам
@@ -1339,6 +1340,8 @@ components:
           minimum: 1
         delivery_vat_rate:
           $ref: '#/components/schemas/VatRate'
+          description: Ставка НДС. Если не облагается НДС то ничего не передавать.
+          example: 20
         total_sum_for_order:
           type: integer
           format: int
@@ -1440,12 +1443,10 @@ components:
           allOf:
             - $ref: "#/components/schemas/OrderPayment"
           nullable: true
-          example: 153.28
         delivery:
           allOf:
             - $ref: "#/components/schemas/OrderDelivery"
           nullable: true
-          example: 153.28
         characteristic:
           allOf:
             - $ref: "#/components/schemas/Characteristics"
@@ -1568,7 +1569,8 @@ components:
     VatRate:
       type: integer
       format: int
-      description: "Ставка НДС"
+      description:
+        Ставка НДС. Если не облагается НДС то ничего не передавать.
       example: 20
       enum:
         - 0
