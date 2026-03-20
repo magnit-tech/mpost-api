@@ -1,5 +1,23 @@
 {
-  "subdomain": "magnit-post.apidocumentation.com",
-  "references": [],
-  "guides": []
+  "scalar": "2.0.0",
+  "$schema": "https://cdn.scalar.com/schema/scalar-config-next.json",
+  "info": {
+    "title": "Magnit Post service API",
+    "description": "Documentation for Magnit Post service API"
+  },
+  "siteConfig": {
+    "subdomain": "magnit-post"
+  },
+  "navigation": {
+    "routes": {
+      "/": {
+        "title": "API Reference",
+        "type": "openapi",
+        "mode": "flat",
+        "singlePage": false,
+        "showInSidebar": true,
+        "filepath": "swagger.yaml"
+      }
+    }
+  }
 }
