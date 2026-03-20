@@ -1029,7 +1029,7 @@ components:
           example: 3500
         delivery_vat_rate:
           example: 20
-          $ref: '#/components/schemas/VatRate'
+          $ref: "#/components/schemas/VatRate"
           description: Ставка НДС. Если не облагается НДС то ничего не передавать.
         total_sum_for_order:
           type: integer
@@ -1040,7 +1040,7 @@ components:
           description: ИНН поставщика
           minLength: 10
           maxLength: 12
-          pattern: '^[0-9]+$'
+          pattern: "^[0-9]+$"
           example: 12345678
         supplier_name:
           type: string
@@ -1339,7 +1339,7 @@ components:
           example: 3500
           minimum: 1
         delivery_vat_rate:
-          $ref: '#/components/schemas/VatRate'
+          $ref: "#/components/schemas/VatRate"
           description: Ставка НДС. Если не облагается НДС то ничего не передавать.
           example: 20
         total_sum_for_order:
@@ -1353,7 +1353,7 @@ components:
           description: "ИНН поставщика"
           minLength: 10
           maxLength: 12
-          pattern: '^[0-9]+$'
+          pattern: "^[0-9]+$"
         supplier_name:
           type: string
           description: "Наименование поставщика"
@@ -1569,8 +1569,7 @@ components:
     VatRate:
       type: integer
       format: int
-      description:
-        Ставка НДС. Если не облагается НДС то ничего не передавать.
+      description: Ставка НДС. Если не облагается НДС то ничего не передавать.
       example: 20
       enum:
         - 0
