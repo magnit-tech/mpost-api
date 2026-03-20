@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.0.9
+  version: 1.1.0
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
