@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.1.0
+  version: 1.1.1
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
@@ -776,6 +776,17 @@ components:
           example:
             latitude: 55.858563
             longitude: 48.904931
+        payment_method:
+          description: Доступные способы оплаты на ПВЗ. |
+            postpay - оплата по ссылке
+            already_paid - предоплата
+          type: array
+          items:
+            type: string
+            enum:
+              - already_paid
+              - postpay
+          example: ["already_paid", "postpay"]
     WorkHours:
       type: array
       description: Расписание работы ПВЗ
