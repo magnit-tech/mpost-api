@@ -437,6 +437,7 @@ components:
         format: int
         minimum: 1
         default: 1
+
     pageSize:
       name: size
       in: query
@@ -448,6 +449,7 @@ components:
         minimum: 1
         maximum: 1000
         default: 100
+
     pickupPointKey:
       name: key
       in: query
@@ -456,6 +458,7 @@ components:
       schema:
         type: string
         example: "63933"
+
     region:
       name: region
       in: query
@@ -464,6 +467,7 @@ components:
       schema:
         type: string
         example: Татарстан
+
     city:
       name: city
       in: query
@@ -472,6 +476,7 @@ components:
       schema:
         type: string
         example: Казань
+
     CustomerOrderID:
       in: query
       name: customerOrderId
@@ -480,6 +485,7 @@ components:
       required: false
       description: Фильтр по идентификатору заказа в системе отправителя
       example: MP-2343423432
+
     ExternalOrderID:
       in: query
       name: externalOrderId
@@ -488,6 +494,7 @@ components:
       required: false
       description: Фильтр по внешнему идентификатору заказа
       example: 123e4567-e89b-12d3-a456-426614174000
+
     StatusParam:
       in: query
       name: status
@@ -495,6 +502,7 @@ components:
         $ref: "#/components/schemas/OrderV1Status"
       required: false
       description: Фильтр по статусу заказа
+
     CreatedFrom:
       in: query
       name: createdFrom
@@ -502,6 +510,7 @@ components:
         $ref: "#/components/schemas/DateTime"
       required: false
       description: Дата создания с
+
     CreatedTo:
       in: query
       name: createdTo
@@ -509,6 +518,7 @@ components:
         $ref: "#/components/schemas/DateTime"
       required: false
       description: Дата создания по
+
     SortDirection:
       name: sortDirection
       in: query
@@ -527,6 +537,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/CreateWarehouseRequest"
+
   responses:
     ErrorResponse:
       description: Ошибка
@@ -534,6 +545,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponseBody"
+
   schemas:
     OauthToken:
       type: object
@@ -560,6 +572,7 @@ components:
           type: string
           description: Тип токена
           example: bearer
+
     OauthRequest:
       type: object
       required:
@@ -585,6 +598,7 @@ components:
           description: Тип доступа
           example: client_credentials
           default: client_credentials
+
     OauthError:
       type: object
       required:
@@ -602,11 +616,13 @@ components:
         message:
           type: string
           description: Системное сообщение
+
     UUID:
       type: string
       format: uuid
       example: 123e4567-e89b-12d3-a456-426614174000
       description: Идентификатор в формате UUID
+
     ErrorCodes:
       description: Коды ошибок
       type: string
@@ -617,6 +633,7 @@ components:
         - INTERNAL_SERVER_ERROR
         - UNPROCESSABLE_ENTITY
         - CONFLICT
+
     Errors:
       type: object
       required:
@@ -630,10 +647,12 @@ components:
           maxItems: 100
           items:
             type: string
+
     ErrorResponseBody:
       oneOf:
         - $ref: "#/components/schemas/Error"
         - $ref: "#/components/schemas/Errors"
+
     Error:
       type: object
       required:
@@ -644,6 +663,7 @@ components:
           $ref: "#/components/schemas/ErrorCodes"
         message:
           type: string
+
     EstimateOrderRequestBody:
       type: object
       required:
@@ -693,6 +713,7 @@ components:
           type: integer
           minimum: 1
           description: Количество посылок в заказе
+
     EstimateOrderResponseBody:
       type: object
       required:
@@ -716,6 +737,7 @@ components:
           type: integer
           description: Стоимость доставки с НДС в копейках
           example: 30500
+
     PickupPointsResponse:
       type: object
       required:
@@ -729,6 +751,7 @@ components:
             $ref: "#/components/schemas/PickupPoint"
         pager:
           $ref: "#/components/schemas/Pager"
+
     PickupPoint:
       type: object
       properties:
@@ -787,6 +810,7 @@ components:
               - already_paid
               - postpay
           example: ["already_paid", "postpay"]
+
     WorkHours:
       type: array
       description: Расписание работы ПВЗ
@@ -794,6 +818,7 @@ components:
         $ref: "#/components/schemas/DayWorkHours"
       minItems: 1
       maxItems: 7
+
     DayWorkHours:
       type: object
       description: Часы работы
@@ -808,6 +833,7 @@ components:
           description: Закрытие
           type: string
           example: 20:00
+
     Week:
       type: string
       description: День недели
@@ -819,6 +845,7 @@ components:
         - FRI
         - SAT
         - SUN
+
     Pager:
       type: object
       required:
@@ -850,16 +877,19 @@ components:
           type: integer
           format: int32
           example: 100
+
     WarehouseName:
       type: string
       minLength: 1
       maxLength: 256
       description: Название склада
+
     WarehouseAddress:
       type: string
       minLength: 1
       maxLength: 512
       description: Адрес склада
+
     Coordinates:
       type: object
       required:
@@ -878,6 +908,7 @@ components:
           minimum: -180
           maximum: 180
           description: Долгота
+
     CreateWarehouseRequest:
       type: object
       required:
@@ -891,6 +922,7 @@ components:
           $ref: "#/components/schemas/WarehouseAddress"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
+
     CreateWarehouseResponse:
       type: object
       required:
@@ -899,6 +931,7 @@ components:
         id:
           type: string
           format: uuid
+
     GetWarehouseResponse:
       type: object
       properties:
@@ -910,6 +943,7 @@ components:
           $ref: "#/components/schemas/WarehouseAddress"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
+
     UpdateWarehouseRequest:
       type: object
       required:
@@ -926,6 +960,7 @@ components:
           $ref: "#/components/schemas/WarehouseAddress"
         coordinates:
           $ref: "#/components/schemas/Coordinates"
+
     CreateOrderRequest:
       type: object
       required:
@@ -963,6 +998,7 @@ components:
           allOf:
             - $ref: "#/components/schemas/UUID"
           description: Идентификатор склада возврата
+
     CreateOrderResponse:
       type: object
       properties:
@@ -989,6 +1025,7 @@ components:
           example: EXT-2343423432
         warehouseId:
           $ref: "#/components/schemas/UUID"
+
     CreateOrderV2Request:
       type: object
       required:
@@ -1030,6 +1067,7 @@ components:
             $ref: "#/components/schemas/ParcelShort"
         order_payment:
           $ref: "#/components/schemas/OrderV2Payment"
+
     OrderV2Payment:
       type: object
       description: Информация по оплате заказа
@@ -1063,6 +1101,7 @@ components:
           type: boolean
           description: Флаг, указывающий, является ли поставщик плательщиком НДС
           example: true
+
     CreateOrderV2Response:
       type: object
       required:
@@ -1106,6 +1145,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ParcelShort"
+
     ParcelItem:
       type: object
       description: Товар внутри посылки
@@ -1147,6 +1187,7 @@ components:
             - 10
             - 20
             - 22
+
     ParcelShort:
       type: object
       required:
@@ -1160,36 +1201,12 @@ components:
         characteristic:
           $ref: "#/components/schemas/Characteristics"
         parcel_payment:
-          type: object
-          description: Информация по оплате посылки
-          properties:
-            billing_type:
-              type: string
-              description: Статус оплаты посылки
-              enum:
-                - not_paid
-                - already_paid
-            items:
-              type: array
-              description: Список товаров в посылке
-              items:
-                $ref: "#/components/schemas/ParcelItem"
-              example:
-                - good_id: SKU-12345
-                  name: Молоко 1л
-                  unit: piece
-                  quantity: 2
-                  unit_price: 15000
-                  total_sum_for_item: 30000
-                  vat_rate: 10
-            total_sum_for_parcel:
-              type: integer
-              description: Сумма за посылку
-              example: 30000
+          $ref: "#/components/schemas/ParcelPayment"
         barcode:
           type: string
           description: Идентификатор посылки в системе отправителя
           example: MP-2343423432_1
+
     Parcel:
       allOf:
         - $ref: "#/components/schemas/ParcelShort"
@@ -1204,6 +1221,44 @@ components:
               allOf:
                 - $ref: "#/components/schemas/UUID"
               description: Идентификатор посылки. Проставляется сервисом.
+
+    ParcelPayment:
+      type: object
+      description: "Информация по оплате посылки"
+      required:
+        - billing_type
+        - items
+        - total_sum_for_parcel
+      properties:
+        billing_type:
+          type: string
+          description: "Тип оплаты посылки"
+          enum:
+            - not_paid
+            - already_paid
+        items:
+          type: array
+          minItems: 1
+          description: "Список товаров в посылке"
+          items:
+            $ref: "#/components/schemas/ParcelItem"
+            example:
+            - good_id: SKU-12345
+              name: Молоко 1л
+              unit: piece
+              quantity: 2
+              unit_price: 15000
+              total_sum_for_item: 30000
+              vat_rate: 10
+        total_sum_for_parcel:
+          type: integer
+          description: "Сумма за посылку"
+          example: 30000
+          minimum: 1
+        parcel_paid:
+          type: boolean
+          description: "Оплачена ли посылка"
+
     PickupPointShort:
       type: object
       required:
@@ -1213,6 +1268,7 @@ components:
           description: Ключ пункта выдачи заказа
           type: string
           example: "63933"
+
     Recipient:
       type: object
       required:
@@ -1320,6 +1376,7 @@ components:
           minLength: 1
           items:
             $ref: "#/components/schemas/Parcel"
+
     OrderV2Delivery:
       type: object
       required:
@@ -1333,6 +1390,7 @@ components:
         pickup_point_address:
           type: string
           example: г. Казань, ул. Альфии Авзаловой, д. 7 (Магнит Косметик)
+
     OrderPayment:
       type: object
       required:
@@ -1374,6 +1432,7 @@ components:
           type: boolean
           description: "Флаг, указывающий, является ли поставщик плательщиком НДС"
           example: true
+
     OrderDelivery:
       type: object
       required:
@@ -1385,6 +1444,7 @@ components:
           example: "63933"
         recipient:
           $ref: "#/components/schemas/OrderDeliveryRecipient"
+
     OrderDeliveryRecipient:
       type: object
       required:
@@ -1410,6 +1470,7 @@ components:
           type: string
           description: Адрес получателя
           example: г. Казань, ул. Альфии Авзаловой, д. 7
+
     OrderStatus:
       type: string
       description: Статус заказа на доставку
@@ -1432,6 +1493,7 @@ components:
         - RETURNED_TO_PROVIDER
         - CANCELED_BY_PROVIDER
         - ACCEPTED_AT_CUSTOMS
+
     Order:
       type: object
       properties:
@@ -1497,6 +1559,7 @@ components:
           description: |
             Cрок хранения заказа на ПВЗ.
             Отображается только только в статусе ACCEPTED_AT_POINT
+
     GetOrdersResponse:
       type: object
       required:
@@ -1509,6 +1572,7 @@ components:
             $ref: "#/components/schemas/Order"
         pager:
           $ref: "#/components/schemas/Pager"
+
     GetOrderStatusesResponse:
       type: object
       required:
@@ -1532,6 +1596,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/UUID"
+
     DeliveryOrderHistoryResponse:
       type: object
       description: История изменения статусов заказа на доставку
@@ -1550,11 +1615,13 @@ components:
                 type: integer
                 format: int64
                 description: Время изменения статуса
+
     DateTime:
       type: string
       description: "Дата/время в формате (RFC3339 формат : %Y-%M-%DT%h:%m:%sZ)"
       example: 2023-03-20T15:04:05.000Z
       format: date-time
+
     OrderV1Status:
       type: string
       description: Статус заказа на доставку
@@ -1577,6 +1644,7 @@ components:
         - RETURNED_TO_PROVIDER
         - CANCELED_BY_PROVIDER
         - ACCEPTED_AT_CUSTOMS
+
     VatRate:
       type: integer
       format: int
@@ -1589,6 +1657,7 @@ components:
         - 10
         - 20
         - 22
+
   securitySchemes:
     bearerAuth:
       type: http
