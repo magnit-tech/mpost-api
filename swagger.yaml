@@ -771,6 +771,10 @@ components:
           description: Адрес пункта выдачи заказов
           type: string
           example: г. Казань, ул. Альфии Авзаловой, д. 7 (Магнит Косметик)
+        short_address:
+          description: Адрес пункта выдачи заказов (сокращенный)
+          type: string
+          example: "г. Казань, ул. Альфии Авзаловой, д. 7"
         region:
           description: Регион, в котором находится ПВЗ
           type: string
