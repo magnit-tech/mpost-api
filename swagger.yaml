@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.1.1
+  version: 1.1.2
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
@@ -91,7 +91,26 @@ paths:
   /api/v1/magnit-post/orders:
     post:
       summary: Создать заказ
-      description: Метод позволяет создать новый заказ на доставку.
+      description: >
+        Метод позволяет создать новый заказ на доставку.
+
+
+        Требование к шк:
+
+
+        `mag1580094123` – пример штрих кода
+
+        mag – префикс штрих кода. ( префикс обязательно должен быть на латинице, согласовывается с коммерческим менеджером Магнит Пост)
+
+
+        1580094123 – последние десять символов указывают уникальный номер элемента,
+
+        Требования к генерации штрих-кода на стороне партнера:
+
+            - Штрих-код не должен состоять только из цифр.
+            - После префикса можно использовать дефис, нижнее подчеркивание.
+            - Партнерам запрещается передавать значения, дублирующие префикс других контрагентов.
+
       requestBody:
         required: true
         content:
@@ -416,6 +435,37 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/OrderV2"
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+    delete:
+      summary: Отменить многоместный заказ
+      description: Отменяет указанные посылки многоместного заказа.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: Трек-номер заказа (UUID)
+          schema:
+            type: string
+            format: uuid
+        - name: parcelIds
+          in: query
+          required: true
+          description: Список идентификаторов посылок для отмены
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/UUID"
+            minItems: 1
+      responses:
+        "204":
+          description: Запрос на отмену принят
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
@@ -1273,6 +1323,7 @@ components:
       required:
         - customer_order_id
         - tracking_number
+        - status
       properties:
         external_order_id:
           type: string
@@ -1320,6 +1371,28 @@ components:
           minLength: 1
           items:
             $ref: "#/components/schemas/Parcel"
+        status:
+          type: string
+          description: Статус заказа
+          enum:
+            - "CANCELED"
+            - "DELIVERED"
+            - "RETURNED"
+            - "AWAITING_PICKUP"
+            - "PARTIALLY_DELIVERED"
+            - "PARTIALLY_RETURNED"
+            - "PARTIALLY_AWAITING_PICKUP"
+            - "RETURNING"
+            - "PARTIALLY_CANCELED"
+            - "AT_WAREHOUSE"
+            - "PARTIALLY_AT_WAREHOUSE"
+            - "DELIVERING"
+            - "PARTIALLY_DELIVERING"
+            - "CREATED"
+            - "FAILED"
+            - "UNKNOWN"
+            - "CANCELLING"
+            - "PARTIALLY_CANCELLING"
     OrderV2Delivery:
       type: object
       required:
