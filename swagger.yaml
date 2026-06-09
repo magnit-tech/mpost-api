@@ -157,57 +157,6 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
-  /api/v2/magnit-post/orders/estimate:
-    post:
-      summary: Расчет срока и стоимости доставки
-      description: >
-        ### Метод позволяет оценить время и стоимость доставки заказа.
-
-
-        city_from - обазятельное поле, город отправки.
-
-
-        Доступные значения:
-
-
-        - Казань
-
-        - Москва
-
-        - Екатеринбург
-
-        - Ижевск
-
-        - Магнитогорск
-
-        - Оренбург
-
-        - Саратов
-
-        - Регионы
-
-
-        Для городов МО используется значение "Москва", для всех остальных не из
-        списка - "Регионы"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/EstimateOrderRequestBody"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/EstimateOrderResponseBody"
-        "400":
-          $ref: "#/components/responses/ErrorResponse"
-        "401":
-          description: Unauthorized
-        "500":
-          $ref: "#/components/responses/ErrorResponse"
   /api/v1/magnit-post/orders/{order_id}:
     get:
       summary: Получить заказ по ID
@@ -472,6 +421,57 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "404":
           $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+  /api/v2/magnit-post/orders/estimate:
+    post:
+      summary: Расчет срока и стоимости доставки
+      description: >
+        ### Метод позволяет оценить время и стоимость доставки заказа.
+
+
+        city_from - обазятельное поле, город отправки.
+
+
+        Доступные значения:
+
+
+        - Казань
+
+        - Москва
+
+        - Екатеринбург
+
+        - Ижевск
+
+        - Магнитогорск
+
+        - Оренбург
+
+        - Саратов
+
+        - Регионы
+
+
+        Для городов МО используется значение "Москва", для всех остальных не из
+        списка - "Регионы"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EstimateOrderRequestBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstimateOrderResponseBody"
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          description: Unauthorized
         "500":
           $ref: "#/components/responses/ErrorResponse"
 
