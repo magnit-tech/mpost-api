@@ -474,6 +474,28 @@ paths:
           description: Unauthorized
         "500":
           $ref: "#/components/responses/ErrorResponse"
+  /api/v2/magnit-post/orders/{order_id}/extend-storage-period:
+    post:
+      summary: Продление срока хранения заказа
+      description: Продление срока хранения заказа по трек-номеру или баркоду.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: Трек-номер (UUID) или баркод (строка) заказа
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
 
 components:
   parameters:
