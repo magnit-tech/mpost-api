@@ -724,11 +724,63 @@ components:
         message:
           type: string
 
+    EstimateCourierDeliveryRequest:
+      type: object
+      required:
+        - coordinates
+        - parcels
+      properties:
+        coordinates:
+          $ref: "#/components/schemas/EstimateCourierCoordinates"
+        parcels:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/EstimateCourierParcel"
+
+    EstimateCourierCoordinates:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+    EstimateCourierParcel:
+      type: object
+      required:
+        - length_mm
+        - width_mm
+        - height_mm
+        - weight_g
+      properties:
+        length_mm:
+          type: integer
+          format: int64
+        width_mm:
+          type: integer
+          format: int64
+        height_mm:
+          type: integer
+          format: int64
+        weight_g:
+          type: integer
+          format: int64
+
     EstimateOrderRequestBody:
       type: object
       required:
         - city_from
       properties:
+        delivery_type:
+          $ref: "#/components/schemas/DeliveryType"
+        courier_delivery:
+          $ref: "#/components/schemas/EstimateCourierDeliveryRequest"
         pup_region:
           type: string
           description: Регион ПВЗ. Обязательно, если не указан pup_key
@@ -1083,6 +1135,7 @@ components:
     CreateOrderV2Request:
       type: object
       required:
+        - pickup_point
         - parcels
         - recipient
       properties:
@@ -1444,6 +1497,8 @@ components:
             - "PARTIALLY_CANCELLING"
     OrderV2Delivery:
       type: object
+      required:
+        - pickup_point_key
       properties:
         pickup_point_key:
           oneOf:
