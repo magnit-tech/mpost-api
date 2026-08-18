@@ -1083,7 +1083,6 @@ components:
     CreateOrderV2Request:
       type: object
       required:
-        - pickup_point
         - parcels
         - recipient
       properties:
@@ -1445,8 +1444,6 @@ components:
             - "PARTIALLY_CANCELLING"
     OrderV2Delivery:
       type: object
-      required:
-        - pickup_point_key
       properties:
         pickup_point_key:
           oneOf:
