@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.1.4
+  version: 1.1.5
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
@@ -839,6 +839,83 @@ components:
           type: integer
           description: Стоимость доставки с НДС в копейках
           example: 30500
+        courier_delivery:
+          $ref: "#/components/schemas/EstimateCourierDeliveryResponse"
+
+    EstimateCourierInterval:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+
+    EstimateCourierDeliverySlot:
+      type: object
+      required:
+        - from
+        - to
+        - cost
+        - cost_with_vat
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        cost:
+          type: integer
+          description: Стоимость доставки в копейках
+        cost_with_vat:
+          type: integer
+          description: Стоимость доставки с НДС в копейках
+
+    EstimateCourierOnClickResponse:
+      type: object
+      required:
+        - available
+        - cost
+        - cost_with_vat
+      properties:
+        available:
+          type: boolean
+          description: Признак доступности доставки "по клику"
+        expected_interval:
+          $ref: "#/components/schemas/EstimateCourierInterval"
+        cost:
+          type: integer
+          description: Стоимость доставки в копейках
+        cost_with_vat:
+          type: integer
+          description: Стоимость доставки с НДС в копейках
+
+    EstimateCourierOnTimeResponse:
+      type: object
+      required:
+        - available
+        - slots
+      properties:
+        available:
+          type: boolean
+          description: Признак доступности доставки "по времени"
+        slots:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstimateCourierDeliverySlot"
+
+    EstimateCourierDeliveryResponse:
+      type: object
+      properties:
+        on_click:
+          $ref: "#/components/schemas/EstimateCourierOnClickResponse"
+        on_time:
+          $ref: "#/components/schemas/EstimateCourierOnTimeResponse"
 
     PickupPointsResponse:
       type: object
