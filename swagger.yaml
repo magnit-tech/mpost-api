@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.1.2
+  version: 1.1.6
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
@@ -263,6 +263,7 @@ paths:
         - $ref: "#/components/parameters/pickupPointKey"
         - $ref: "#/components/parameters/region"
         - $ref: "#/components/parameters/city"
+        - $ref: "#/components/parameters/dropOff"
       responses:
         "200":
           description: OK
@@ -337,7 +338,9 @@ paths:
   /api/v1/magnit-post/orders/{order_id}/labels:
     get:
       summary: Получить PDF-этикетку посылки
-      description: Метод возвращает PDF-файл с этикеткой по трек-номеру заказа.
+      description: |
+        Метод возвращает PDF-файл с этикеткой по трек-номеру заказа.
+        order_id — id посылки; для многоместного заказа возвращаются этикетки всех его посылок.
       parameters:
         - name: order_id
           in: path
@@ -346,6 +349,15 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: labelSize
+          in: query
+          required: false
+          description: "Размер этикетки. По умолчанию 58x60"
+          schema:
+            type: string
+            enum:
+              - 58x60
+              - 100x150
       responses:
         "200":
           description: PDF с этикеткой
@@ -370,7 +382,8 @@ paths:
         ### Требование к шк:
         `mag1580094123` – пример штрих кода
 
-        `mag` – префикс штрих кода. (*префикс обязательно должен быть на латинице, согласовывается с коммерческим менеджером Магнит Пост*)
+        `mag` – префикс штрих кода. (*префикс обязательно должен быть на латинице,
+        согласовывается с коммерческим менеджером Магнит Пост*)
 
         `1580094123` – последние десять символов указывают уникальный номер элемента,
         ### Требования к генерации штрих-кода на стороне партнера:
@@ -424,7 +437,9 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
     patch:
       summary: Обновить посылки и получателя заказа
-      description: Обновляет объявленную стоимость и габаритно-весовые характеристики посылок, а также имя, фамилию и телефон получателя.
+      description: |
+        Обновляет объявленную стоимость и габаритно-весовые характеристики посылок,
+        а также имя, фамилию и телефон получателя.
       parameters:
         - name: order_id
           in: path
@@ -476,6 +491,58 @@ paths:
       responses:
         "204":
           description: Запрос на отмену принят
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
+  /api/v1/magnit-post/orders/labels:
+    post:
+      summary: Получить PDF-этикетки по списку id посылок
+      description: |
+        Метод возвращает один PDF-файл с этикетками посылок по списку id посылок.
+        Лимит — 200 посылок суммарно.
+      parameters:
+        - name: labelSize
+          in: query
+          required: false
+          description: "Размер этикетки. По умолчанию 58x60"
+          schema:
+            type: string
+            enum:
+              - 58x60
+              - 100x150
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Список id посылок
+              example:
+                parcelIds:
+                  - "123e4567-e89b-12d3-a456-426614174000"
+                  - "123e4567-e89b-12d3-a456-426614174001"
+              required:
+                - parcelIds
+              properties:
+                parcelIds:
+                  type: array
+                  minItems: 1
+                  maxItems: 200
+                  items:
+                    $ref: "#/components/schemas/UUID"
+      responses:
+        "200":
+          description: PDF с этикетками
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         "400":
           $ref: "#/components/responses/ErrorResponse"
         "401":
@@ -536,6 +603,14 @@ components:
       schema:
         type: string
         example: Казань
+
+    dropOff:
+      name: dropOff
+      in: query
+      description: Фильтр по признаку приёма посылок (drop-off / c2c)
+      required: false
+      schema:
+        type: boolean
 
     CustomerOrderID:
       in: query
@@ -724,11 +799,63 @@ components:
         message:
           type: string
 
+    EstimateCourierDeliveryRequest:
+      type: object
+      required:
+        - coordinates
+        - parcels
+      properties:
+        coordinates:
+          $ref: "#/components/schemas/EstimateCourierCoordinates"
+        parcels:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/EstimateCourierParcel"
+
+    EstimateCourierCoordinates:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+    EstimateCourierParcel:
+      type: object
+      required:
+        - length_mm
+        - width_mm
+        - height_mm
+        - weight_g
+      properties:
+        length_mm:
+          type: integer
+          format: int64
+        width_mm:
+          type: integer
+          format: int64
+        height_mm:
+          type: integer
+          format: int64
+        weight_g:
+          type: integer
+          format: int64
+
     EstimateOrderRequestBody:
       type: object
       required:
         - city_from
       properties:
+        delivery_type:
+          $ref: "#/components/schemas/DeliveryType"
+        courier_delivery:
+          $ref: "#/components/schemas/EstimateCourierDeliveryRequest"
         pup_region:
           type: string
           description: Регион ПВЗ. Обязательно, если не указан pup_key
@@ -787,6 +914,83 @@ components:
           type: integer
           description: Стоимость доставки с НДС в копейках
           example: 30500
+        courier_delivery:
+          $ref: "#/components/schemas/EstimateCourierDeliveryResponse"
+
+    EstimateCourierInterval:
+      type: object
+      required:
+        - from
+        - to
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+
+    EstimateCourierDeliverySlot:
+      type: object
+      required:
+        - from
+        - to
+        - cost
+        - cost_with_vat
+      properties:
+        from:
+          type: string
+          format: date-time
+        to:
+          type: string
+          format: date-time
+        cost:
+          type: integer
+          description: Стоимость доставки в копейках
+        cost_with_vat:
+          type: integer
+          description: Стоимость доставки с НДС в копейках
+
+    EstimateCourierOnClickResponse:
+      type: object
+      required:
+        - available
+        - cost
+        - cost_with_vat
+      properties:
+        available:
+          type: boolean
+          description: Признак доступности доставки "по клику"
+        expected_interval:
+          $ref: "#/components/schemas/EstimateCourierInterval"
+        cost:
+          type: integer
+          description: Стоимость доставки в копейках
+        cost_with_vat:
+          type: integer
+          description: Стоимость доставки с НДС в копейках
+
+    EstimateCourierOnTimeResponse:
+      type: object
+      required:
+        - available
+        - slots
+      properties:
+        available:
+          type: boolean
+          description: Признак доступности доставки "по времени"
+        slots:
+          type: array
+          items:
+            $ref: "#/components/schemas/EstimateCourierDeliverySlot"
+
+    EstimateCourierDeliveryResponse:
+      type: object
+      properties:
+        on_click:
+          $ref: "#/components/schemas/EstimateCourierOnClickResponse"
+        on_time:
+          $ref: "#/components/schemas/EstimateCourierOnTimeResponse"
 
     PickupPointsResponse:
       type: object
@@ -864,6 +1068,10 @@ components:
               - already_paid
               - postpay
           example: ["already_paid", "postpay"]
+        drop_off_available:
+          description: Признак доступности приёма посылок (drop-off / c2c) в данном ПВЗ
+          type: boolean
+          example: true
 
     WorkHours:
       type: array
@@ -1083,6 +1291,7 @@ components:
     CreateOrderV2Request:
       type: object
       required:
+        - pickup_point
         - parcels
         - recipient
       properties:
@@ -1117,6 +1326,11 @@ components:
           allOf:
             - $ref: "#/components/schemas/UUID"
           description: Идентификатор склада возврата
+        sender:
+          $ref: "#/components/schemas/Sender"
+        drop_off_key:
+          type: string
+          description: ИД (key) логистической точки drop-off, куда c2c-отправитель или партнёр передаёт посылку в логистику. Обязателен, если указан sender
         parcels:
           type: array
           minLength: 1
@@ -1198,6 +1412,11 @@ components:
           allOf:
             - $ref: "#/components/schemas/UUID"
           description: Идентификатор склада возврата
+        sender:
+          $ref: "#/components/schemas/Sender"
+        drop_off_key:
+          type: string
+          description: ИД (key) логистической точки drop-off, куда c2c-отправитель передал посылку в логистику
         parcels:
           type: array
           items:
@@ -1338,6 +1557,25 @@ components:
           description: "Адрес получателя"
           example: "г. Казань, ул. Альфии Авзаловой, д. 7"
 
+    Sender:
+      type: object
+      description: Данные отправителя c2c drop-off заказа
+      required:
+        - phone
+      properties:
+        first_name:
+          type: string
+          description: Имя отправителя
+          example: Иван
+        last_name:
+          type: string
+          description: Фамилия отправителя
+          example: Иванов
+        phone:
+          type: string
+          description: Телефон отправителя
+          example: +7..........
+
     Characteristics:
       type: object
       required:
@@ -1415,6 +1653,11 @@ components:
           allOf:
             - $ref: "#/components/schemas/UUID"
           description: Идентификатор склада возврата
+        sender:
+          $ref: "#/components/schemas/Sender"
+        drop_off_key:
+          type: string
+          description: ИД (key) логистической точки drop-off, куда c2c-отправитель передал посылку в логистику
         parcels:
           type: array
           minLength: 1
@@ -1442,8 +1685,12 @@ components:
             - "UNKNOWN"
             - "CANCELLING"
             - "PARTIALLY_CANCELLING"
+            - "ACCEPTED_FROM_SENDER_AT_POINT"
+            - "PARTIALLY_ACCEPTED_FROM_SENDER_AT_POINT"
     OrderV2Delivery:
       type: object
+      required:
+        - pickup_point_key
       properties:
         pickup_point_key:
           oneOf:
@@ -1557,6 +1804,8 @@ components:
         - RETURNED_TO_PROVIDER
         - CANCELED_BY_PROVIDER
         - ACCEPTED_AT_CUSTOMS
+        - ACCEPTED_FROM_SENDER_AT_POINT
+        - RETURN_ARRIVED_TO_DESTINATION_POINT
 
     Order:
       type: object
@@ -1623,6 +1872,10 @@ components:
           description: |
             Cрок хранения заказа на ПВЗ.
             Отображается только только в статусе ACCEPTED_AT_POINT
+        initialDeliveryAt:
+          $ref: "#/components/schemas/DateTime"
+        deliveryAt:
+          $ref: "#/components/schemas/DateTime"
 
     GetOrdersResponse:
       type: object
@@ -1708,6 +1961,8 @@ components:
         - RETURNED_TO_PROVIDER
         - CANCELED_BY_PROVIDER
         - ACCEPTED_AT_CUSTOMS
+        - ACCEPTED_FROM_SENDER_AT_POINT
+        - RETURN_ARRIVED_TO_DESTINATION_POINT
 
     VatRate:
       type: integer
@@ -1819,6 +2074,7 @@ components:
       required:
         - city_name
         - full_address
+        - city_from
       properties:
         city_name:
           type: string
@@ -1829,6 +2085,10 @@ components:
         comment:
           type: string
           description: Комментарий курьеру
+        city_from:
+          type: string
+          example: Москва
+          description: Город отправки
 
     CreateOrderCourierTimeSlot:
       type: object
