@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   description: Magnit Post service API
   title: Magnit Post service API
-  version: 1.1.6
+  version: 1.1.7
 servers:
   - url: https://b2b-api-gateway.uat.ya.magnit.ru/
     description: Демо сервер для проведения тестирования интеграции.
@@ -499,6 +499,34 @@ paths:
           $ref: "#/components/responses/ErrorResponse"
         "500":
           $ref: "#/components/responses/ErrorResponse"
+  /api/v2/magnit-post/orders/{order_id}/extend-storage-period:
+    post:
+      summary: Продление срока хранения заказа
+      description: |
+        Метод позволяет продлить срок хранения заказа на ПВЗ.
+
+        * Срок хранения заказа можно продлить только один раз.
+        * Продление доступно только для доставки в ПВЗ, когда все посылки заказа доставлены на ПВЗ.
+
+        Новый срок хранения возвращается в поле `storage_end_date` посылок в методе получения заказа.
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          description: Трек-номер (UUID) или баркод (строка) заказа
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Срок хранения продлён
+        "400":
+          $ref: "#/components/responses/ErrorResponse"
+        "401":
+          $ref: "#/components/responses/ErrorResponse"
+        "404":
+          $ref: "#/components/responses/ErrorResponse"
+        "500":
+          $ref: "#/components/responses/ErrorResponse"
   /api/v1/magnit-post/orders/labels:
     post:
       summary: Получить PDF-этикетки по списку id посылок
@@ -812,6 +840,13 @@ components:
           minItems: 1
           items:
             $ref: "#/components/schemas/EstimateCourierParcel"
+        delivery_start_at:
+          type: string
+          format: date-time
+          example: 2023-03-20T15:04:05.000Z
+          description: |
+            Дата и время, начиная с которых рассчитывать слоты курьерской доставки.
+            Если не указано, используется текущее время плюс 3 дня.
 
     EstimateCourierCoordinates:
       type: object
@@ -872,24 +907,19 @@ components:
           type: string
           example: Москва
           description: |
-            **Город отправки. Доступные значения:**
-            - Казань
-            - Москва
-            - Воронеж
-            - Екатеринбург
-            - Ижевск
-            - Магнитогорск
-            - Оренбург
-            - Саратов
-            - Регионы
-
-            > [!IMPORTANT]
-            > Для городов МО используется значение "Москва", для всех остальных не
-            из списка - "Регионы"
+            **Город отправки. Если город есть в нескольких регионах, нужно передать region_from.**
+        region_from:
+          type: string
+          description: Регион города отправки. Обязателен, если city_from есть в нескольких регионах (например, Карабаш).
         parcels_count:
           type: integer
           minimum: 1
           description: Количество посылок в заказе
+        weight_g:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Вес посылки
 
     EstimateOrderResponseBody:
       type: object
@@ -1330,6 +1360,7 @@ components:
           $ref: "#/components/schemas/Sender"
         drop_off_key:
           type: string
+          minLength: 1
           description: ИД (key) логистической точки drop-off, куда c2c-отправитель или партнёр передаёт посылку в логистику. Обязателен, если указан sender
         parcels:
           type: array
@@ -1517,6 +1548,10 @@ components:
                 - $ref: "#/components/schemas/OrderV1Status"
             storage_end_date:
               $ref: "#/components/schemas/DateTime"
+            auto_cancel_at:
+              allOf:
+                - $ref: "#/components/schemas/DateTime"
+              description: Дата/время автоотмены drop-off заказа, если он не сдан в ПВЗ в срок
             id:
               allOf:
                 - $ref: "#/components/schemas/UUID"
@@ -1687,6 +1722,8 @@ components:
             - "PARTIALLY_CANCELLING"
             - "ACCEPTED_FROM_SENDER_AT_POINT"
             - "PARTIALLY_ACCEPTED_FROM_SENDER_AT_POINT"
+            - "IN_COURIER_DELIVERY"
+            - "PARTIALLY_IN_COURIER_DELIVERY"
     OrderV2Delivery:
       type: object
       required:
@@ -1806,6 +1843,8 @@ components:
         - ACCEPTED_AT_CUSTOMS
         - ACCEPTED_FROM_SENDER_AT_POINT
         - RETURN_ARRIVED_TO_DESTINATION_POINT
+        - IN_COURIER_DELIVERY
+        - PARTIALLY_IN_COURIER_DELIVERY
 
     Order:
       type: object
@@ -1963,6 +2002,8 @@ components:
         - ACCEPTED_AT_CUSTOMS
         - ACCEPTED_FROM_SENDER_AT_POINT
         - RETURN_ARRIVED_TO_DESTINATION_POINT
+        - IN_COURIER_DELIVERY
+        - PARTIALLY_IN_COURIER_DELIVERY
 
     VatRate:
       type: integer
